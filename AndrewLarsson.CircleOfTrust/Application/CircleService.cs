@@ -1,13 +1,15 @@
-﻿namespace AndrewLarsson.CircleOfTrust;
+﻿using AndrewLarsson.CircleOfTrust.Model;
+
+namespace AndrewLarsson.CircleOfTrust.Application;
 public class CircleService {
-	public (Circle, ClaimCircleEvent) ClaimCircle(
+	public (Circle, ICircleEvent) ClaimCircle(
 		ClaimCircle message
 	) {
 		var (circle, @event) = Circle.Claim(message);
 		return (circle, @event);
 	}
 
-	public (Circle, JoinCircleEvent) JoinCircle(
+	public (Circle, ICircleEvent) JoinCircle(
 		Circle circle,
 		JoinCircle message
 	) {
@@ -15,7 +17,7 @@ public class CircleService {
 		return (circle, @event);
 	}
 
-	public (Circle, BetrayCircleEvent) BetrayCircle(
+	public (Circle, ICircleEvent) BetrayCircle(
 		Circle circle,
 		BetrayCircle message
 	) {
