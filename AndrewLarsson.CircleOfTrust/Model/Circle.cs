@@ -88,6 +88,6 @@ public record CircleJoined(string Member) : ICircleEvent;
 public record BetrayCircle(string User, string Key);
 public record CircleBetrayed(bool Betrayed) : ICircleEvent;
 
-public record KeyDoesNotUnlockCircle() : ICircleEvent;
 public record CircleAlreadyBetrayed() : ICircleEvent;
+public record KeyDoesNotUnlockCircle() : ICircleEvent;
 public record UserAlreadyMemberOfCircle(string User) : ICircleEvent;
