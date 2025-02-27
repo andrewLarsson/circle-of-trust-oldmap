@@ -6,60 +6,64 @@ using System.Text.Json.Serialization;
 namespace AndrewLarsson.CircleOfTrust.Infrastructure;
 public class CircleJsonConverter : JsonConverter<Circle> {
 	public override Circle Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) {
-		var doc = JsonDocument.ParseValue(ref reader);
-		var root = doc.RootElement;
-
-		string title = root.GetProperty("Title").GetString()!;
-		string owner = root.GetProperty("Owner").GetString()!;
-		string secretKey = root.GetProperty("Lock").GetProperty("secretKey").GetString()!;
-		var members = root
-			.GetProperty("Members")
+		var json = JsonDocument.ParseValue(ref reader).RootElement;
+		string title = json.GetProperty("title").GetString()
+			?? throw new NullReferenceException()
+		;
+		string owner = json.GetProperty("owner").GetString()
+			?? throw new NullReferenceException()
+		;
+		string secretKey = json.GetProperty("secretKey").GetString()
+			?? throw new NullReferenceException()
+		;
+		List<string> members = json
+			.GetProperty("members")
 			.EnumerateArray()
-			.Select(m => m.GetString()!)
+			.Select(e => e.GetString() ?? throw new NullReferenceException())
 			.ToList()
 		;
-		bool betrayed = root.GetProperty("Betrayed").GetBoolean();
-
+		bool betrayed = json.GetProperty("betrayed").GetBoolean();
 		var constructor = typeof(Circle).GetConstructor(
 			BindingFlags.NonPublic | BindingFlags.Instance,
 			null,
-			[typeof(string), typeof(string), typeof(string), typeof(IEnumerable<string>), typeof(bool)],
+			[
+				typeof(string),
+				typeof(string),
+				typeof(string),
+				typeof(IEnumerable<string>),
+				typeof(bool)
+			],
 			null
-		);
-		return (Circle) constructor!.Invoke([title, owner, secretKey, members, betrayed]);
+		) ?? throw new JsonException("Private constructor for Circle not found.");
+		var circle = constructor.Invoke([
+			title,
+			owner,
+			secretKey,
+			members,
+			betrayed
+		]);
+		return (Circle) circle;
 	}
 
 	public override void Write(Utf8JsonWriter writer, Circle value, JsonSerializerOptions options) {
 		writer.WriteStartObject();
-
-		writer.WriteString("Title", value.Title);
-		writer.WriteString("Owner", value.Owner);
-
-		string secretKey = GetPrimaryConstructorField<Lock, string>(value.Lock, "secretKey")!;
-		writer.WriteStartObject("Lock");
+		writer.WriteString("title", value.Title);
+		writer.WriteString("owner", value.Owner);
+		var secretKeyField = typeof(Lock).GetField("secretKey", BindingFlags.NonPublic | BindingFlags.Instance);
+		string secretKey = (string) (secretKeyField?.GetValue(value.Lock)
+			?? throw new NullReferenceException()
+		);
 		writer.WriteString("secretKey", secretKey);
-		writer.WriteEndObject();
-
-		var members = value.Members
-			.GetType()
-			.GetField("members", BindingFlags.NonPublic | BindingFlags.Instance)!
-			.GetValue(value.Members)
-			as HashSet<string>
-			?? []
-		;
-		writer.WriteStartArray("Members");
+		var membersField = value.Members.GetType().GetField("members", BindingFlags.NonPublic | BindingFlags.Instance);
+		var members = (HashSet<string>) (membersField?.GetValue(value.Members)
+			?? throw new NullReferenceException()
+		);
+		writer.WriteStartArray("members");
 		foreach (var member in members) {
 			writer.WriteStringValue(member);
 		}
 		writer.WriteEndArray();
-
-		writer.WriteBoolean("Betrayed", value.Betrayed);
-
+		writer.WriteBoolean("betrayed", value.Betrayed);
 		writer.WriteEndObject();
-	}
-
-	private static T? GetPrimaryConstructorField<TClass, T>(TClass instance, string paramName) {
-		var field = typeof(TClass).GetField($"<{paramName}>k__BackingField", BindingFlags.NonPublic | BindingFlags.Instance);
-		return (T?) field?.GetValue(instance);
 	}
 }

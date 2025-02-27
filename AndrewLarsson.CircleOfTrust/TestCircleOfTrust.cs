@@ -22,7 +22,7 @@ public class TestCircleOfTrust(IDomainMessageSender domainMessageSender, DomainM
 				domainMessageId: Guid.NewGuid().ToString("N"),
 				address: user1Circle,
 				domainMessage: new ClaimCircle(
-					"User1's Circle",
+					$"{user1} Circle",
 					user1,
 					secretKey
 				)
@@ -85,7 +85,6 @@ public class TestCircleOfTrust(IDomainMessageSender domainMessageSender, DomainM
 			)
 		];
 		foreach (var domainMessage in domainMessages) {
-			await domainMessageSender.Send(domainMessage);
 			await domainMessageSender.Send(domainMessage);
 		}
 	}

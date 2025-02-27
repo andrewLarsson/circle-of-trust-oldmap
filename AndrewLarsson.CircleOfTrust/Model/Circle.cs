@@ -58,6 +58,8 @@ public class Circle {
 }
 
 public class Lock(string secretKey) {
+	readonly string secretKey = secretKey;
+
 	public bool Unlock(string key) {
 		return key == secretKey;
 	}

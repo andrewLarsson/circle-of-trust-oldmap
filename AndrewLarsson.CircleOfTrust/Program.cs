@@ -8,7 +8,7 @@ HostApplicationBuilder applicationBuilder = Host.CreateApplicationBuilder();
 applicationBuilder.Services
 	.AddOLDMAP()
 	.AddKafkaDomainMessageApplication()
-	.AddKafkaDomainEventApplication()
+	//.AddKafkaDomainEventApplication()
 	.AddPostgreSqlMartenAggregateRootStorage()
 	.AddCircleOfTrust()
 	.AddHostedService<TestCircleOfTrust>()
