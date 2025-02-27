@@ -82,12 +82,12 @@ public interface ICircleEvent;
 public record ClaimCircle(string Title, string User, string SecretKey);
 public record CircleClaimed(string Title, string Owner) : ICircleEvent;
 
-public record KeyDoesNotUnlockCircle() : ICircleEvent;
-public record CircleAlreadyBetrayed() : ICircleEvent;
-public record UserAlreadyMemberOfCircle(string User) : ICircleEvent;
-
 public record JoinCircle(string User, string Key);
 public record CircleJoined(string Member) : ICircleEvent;
 
 public record BetrayCircle(string User, string Key);
 public record CircleBetrayed(bool Betrayed) : ICircleEvent;
+
+public record KeyDoesNotUnlockCircle() : ICircleEvent;
+public record CircleAlreadyBetrayed() : ICircleEvent;
+public record UserAlreadyMemberOfCircle(string User) : ICircleEvent;
