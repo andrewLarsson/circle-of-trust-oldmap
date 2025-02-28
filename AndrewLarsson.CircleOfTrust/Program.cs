@@ -1,17 +1,16 @@
-﻿using AndrewLarsson.CircleOfTrust;
-using AndrewLarsson.CircleOfTrust.Hosting;
+﻿using AndrewLarsson.CircleOfTrust.Hosting;
+using AndrewLarsson.CircleOfTrust.Simulations;
 using developersBliss.OLDMAP.Hosting;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
 HostApplicationBuilder applicationBuilder = Host.CreateApplicationBuilder();
 applicationBuilder.Services
 	.AddOLDMAP()
 	.AddKafkaDomainMessageApplication()
-	//.AddKafkaDomainEventApplication()
+	.AddKafkaDomainEventApplication()
 	.AddPostgreSqlMartenAggregateRootStorage()
 	.AddCircleOfTrust()
-	.AddHostedService<TestCircleOfTrust>()
+	.AddLargestCircleSimulation()
 ;
 IHost host = applicationBuilder.Build();
 await host.RunAsync();

@@ -2,8 +2,8 @@
 using developersBliss.OLDMAP.Messaging;
 using Microsoft.Extensions.Hosting;
 
-namespace AndrewLarsson.CircleOfTrust;
-public class TestCircleOfTrust(IDomainMessageSender domainMessageSender, DomainMessagePacker domainMessagePacker) : BackgroundService {
+namespace AndrewLarsson.CircleOfTrust.Simulations;
+public class SampleCircleOfTrustSimulation(IDomainMessageSender domainMessageSender, DomainMessagePacker domainMessagePacker) : BackgroundService {
 	protected override async Task ExecuteAsync(CancellationToken stoppingToken) {
 		await Task.Yield();
 		var user1 = Guid.NewGuid().ToString("N")[..5];
