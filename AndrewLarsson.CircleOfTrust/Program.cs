@@ -10,6 +10,7 @@ applicationBuilder.Services
 	.AddKafkaDomainEventApplication()
 	.AddPostgreSqlMartenAggregateRootStorage()
 	.AddCircleOfTrust()
+	//.AddSampleCircleOfTrustSimulation()
 	.AddLargestCircleSimulation()
 ;
 IHost host = applicationBuilder.Build();

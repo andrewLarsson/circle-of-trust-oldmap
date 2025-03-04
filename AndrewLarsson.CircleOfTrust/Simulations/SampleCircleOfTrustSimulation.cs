@@ -1,5 +1,6 @@
 ﻿using AndrewLarsson.CircleOfTrust.Model;
 using developersBliss.OLDMAP.Messaging;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
 namespace AndrewLarsson.CircleOfTrust.Simulations;
@@ -87,5 +88,12 @@ public class SampleCircleOfTrustSimulation(IDomainMessageSender domainMessageSen
 		foreach (var domainMessage in domainMessages) {
 			await domainMessageSender.Send(domainMessage);
 		}
+	}
+}
+
+public static class SampleCircleOfTrustSimulationServiceCollectionExtensions {
+	public static IServiceCollection AddSampleCircleOfTrustSimulation(this IServiceCollection services) {
+		services.AddHostedService<SampleCircleOfTrustSimulation>();
+		return services;
 	}
 }
