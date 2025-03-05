@@ -8,6 +8,10 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <PackageReference Include="Dapper" Version="2.1.66" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<ProjectReference Include="..\..\developersBliss.OLDMAP\developersBliss.OLDMAP.Vendor.Kafka\developersBliss.OLDMAP.Vendor.Kafka.csproj" />
 		<ProjectReference Include="..\..\developersBliss.OLDMAP\developersBliss.OLDMAP.Vendor.PostgreSql\developersBliss.OLDMAP.Vendor.PostgreSql.csproj" />
 		<ProjectReference Include="..\..\developersBliss.OLDMAP\developersBliss.OLDMAP\developersBliss.OLDMAP.csproj" />

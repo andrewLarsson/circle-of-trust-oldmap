@@ -18,14 +18,15 @@ public class LargestCircleSimulation(
 		await Task.Yield();
 
 		const int totalUsers = 100;
-		const int totalTurnsPerUser = 5; // Each user gets X turns to decide what to do
+		const int actionsPerUser = 5;
 		var random = new Random();
 		var secretKey = "April Fools!";
 
 		// Generate 100 unique users
 		var users = Enumerable.Range(1, totalUsers)
 			.Select(_ => Guid.NewGuid().ToString("N")[..5])
-			.ToArray();
+			.ToList()
+		;
 
 		// Create a mapping of each user's circle address
 		var userCircles = users.ToDictionary(
@@ -49,13 +50,13 @@ public class LargestCircleSimulation(
 		}
 
 		// Step 2: Each user takes X turns performing random actions
-		for (int turn = 0; turn < totalTurnsPerUser; turn++) {
+		for (int turn = 0; turn < actionsPerUser; turn++) {
 			foreach (var user in users) {
 				var targetUser = users.Where(u => u != user).OrderBy(_ => random.Next()).First(); // Pick a random user, excluding self
 				var targetCircle = userCircles[targetUser];
 
 				// Randomly decide if the user will join or betray
-				var actionType = random.Next(2); // 0: Join, 1: Betray
+				var actionType = random.NextDouble() < 0.1 ? 1 : 0; // 10% for Betray, 90% for Join
 				var useCorrectKey = random.NextDouble() > 0.2; // 80% chance of using the correct key
 				var key = useCorrectKey ? secretKey : "wrong key";
 

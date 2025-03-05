@@ -6,7 +6,7 @@ public class Circle {
 	public Members Members { get; }
 	public bool Betrayed { get; private set; }
 
-	private Circle(string title, string owner, string secretKey, IEnumerable<string> members, bool betrayed) {
+	Circle(string title, string owner, string secretKey, IEnumerable<string> members, bool betrayed) {
 		Title = title;
 		Owner = owner;
 		Lock = new Lock(secretKey);
