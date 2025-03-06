@@ -1,5 +1,6 @@
 ﻿using AndrewLarsson.CircleOfTrust.Hosting;
 using AndrewLarsson.CircleOfTrust.Simulations;
+using AndrewLarsson.CircleOfTrust.View;
 using developersBliss.OLDMAP.Hosting;
 using Microsoft.Extensions.Hosting;
 
@@ -11,7 +12,8 @@ applicationBuilder.Services
 	.AddPostgreSqlMartenAggregateRootStorage()
 	.AddCircleOfTrust()
 	//.AddSampleCircleOfTrustSimulation()
-	.AddLargestCircleSimulation()
+	.AddView()
+	.AddLargestCircleSimulation(noHandlers: true)
 ;
 IHost host = applicationBuilder.Build();
 await host.RunAsync();

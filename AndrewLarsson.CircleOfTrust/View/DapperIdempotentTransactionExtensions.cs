@@ -3,8 +3,16 @@ using System.Data;
 
 namespace AndrewLarsson.CircleOfTrust.View;
 public static class DapperIdempotentTransactionExtensions {
-	static readonly string SelectIdempotentTransactionAlreadyCommitted = @"SELECT EXISTS (SELECT 1 FROM IdempotentTransactions WHERE TransactionContext = @TransactionContext AND TransactionId = @TransactionId)";
-	static readonly string InsertIdempotentTransaction = @"INSERT INTO IdempotentTransactions (TransactionContext, TransactionId) VALUES (@TransactionContext, @TransactionId);";
+	static readonly string SelectIdempotentTransactionAlreadyCommitted = @"
+		SELECT EXISTS (
+			SELECT 1 FROM IdempotentTransactions 
+			WHERE IdempotencyKey = CONCAT(@TransactionContext, '|', @TransactionId)
+		);
+	";
+	static readonly string InsertIdempotentTransaction = @"
+		INSERT INTO IdempotentTransactions (IdempotencyKey)
+		VALUES (CONCAT(@TransactionContext, '|', @TransactionId));
+	";
 
 	public static async Task ExecuteIdempotentTransaction(
 		this IDbConnection dbConnection,

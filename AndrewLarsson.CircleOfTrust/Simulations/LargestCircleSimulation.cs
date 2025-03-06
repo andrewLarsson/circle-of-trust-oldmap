@@ -137,9 +137,12 @@ public class LargestCircleSimulationEventHandler(
 }
 
 public static class LargestCircleSimulationServiceCollectionExtensions {
-	public static IServiceCollection AddLargestCircleSimulation(this IServiceCollection services) {
+	public static IServiceCollection AddLargestCircleSimulation(this IServiceCollection services, bool noHandlers = false) {
+		services.AddHostedService<LargestCircleSimulation>();
+		if (noHandlers) {
+			return services;
+		}
 		services
-			.AddHostedService<LargestCircleSimulation>()
 			.AddDomainEventHandler<CircleClaimed, LargestCircleSimulationEventHandler>()
 			.AddDomainEventHandler<CircleJoined, LargestCircleSimulationEventHandler>()
 			.AddDomainEventHandler<CircleBetrayed, LargestCircleSimulationEventHandler>()

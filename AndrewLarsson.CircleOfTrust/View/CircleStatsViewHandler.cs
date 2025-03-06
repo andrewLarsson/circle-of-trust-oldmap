@@ -1,20 +1,30 @@
-﻿using AndrewLarsson.CircleOfTrust.Model;
+﻿using AndrewLarsson.CircleOfTrust.Infrastructure;
+using AndrewLarsson.CircleOfTrust.Model;
 using developersBliss.OLDMAP.Messaging;
-using System.Data;
 
 namespace AndrewLarsson.CircleOfTrust.View;
-public class CircleStatsViewHandler(IDbConnection dbConnection) :
+public class CircleStatsViewHandler(ViewDbConnection viewDb) :
 	IDomainEventHandler<CircleClaimed>,
 	IDomainEventHandler<CircleJoined>,
 	IDomainEventHandler<CircleBetrayed> {
 	static readonly string TransactionContext = "CircleStats";
-	// These are SQL Server queries. Change them to PostgreSQL and actually create the schema.
-	static readonly string InsertCircleStatsFromCircleClaimedEvent = @"INSERT INTO CircleStats ([CircleId], [Title], [Owner], [IsBetrayed], [Members]) VALUES (@AggregateRootId, @Title, @Owner, 0, 0);";
-	static readonly string UpdateCircleStatsFromCircleJoinedEvent = @"UPDATE CircleStats SET [Members] = [Members] + 1 WHERE [CircleId] = @AggregateRootId;";
-	static readonly string UpdateCircleStatsFromCircleBetrayedEvent = @"UPDATE CircleStats SET [IsBetrayed] = 1 WHERE [CircleId] = @AggregateRootId;";
+	static readonly string InsertCircleStatsFromCircleClaimedEvent = @"
+		INSERT INTO CircleStats (CircleId, Title, Owner, IsBetrayed, Members) 
+		VALUES (@AggregateRootId, @Title, @Owner, FALSE, 1);
+	";
+	static readonly string UpdateCircleStatsFromCircleJoinedEvent = @"
+		UPDATE CircleStats 
+		SET Members = Members + 1 
+		WHERE CircleId = @AggregateRootId;
+	";
+	static readonly string UpdateCircleStatsFromCircleBetrayedEvent = @"
+		UPDATE CircleStats 
+		SET IsBetrayed = TRUE 
+		WHERE CircleId = @AggregateRootId;
+	";
 
 	public Task Handle(DomainEvent<CircleClaimed> domainEvent) {
-		return dbConnection.ExecuteIdempotentTransaction(
+		return viewDb.ExecuteIdempotentTransaction(
 			transactionContext: TransactionContext,
 			transactionId: domainEvent.DomainMessageId,
 			sql: InsertCircleStatsFromCircleClaimedEvent,
@@ -23,7 +33,7 @@ public class CircleStatsViewHandler(IDbConnection dbConnection) :
 	}
 
 	public Task Handle(DomainEvent<CircleJoined> domainEvent) {
-		return dbConnection.ExecuteIdempotentTransaction(
+		return viewDb.ExecuteIdempotentTransaction(
 			transactionContext: TransactionContext,
 			transactionId: domainEvent.DomainMessageId,
 			sql: UpdateCircleStatsFromCircleJoinedEvent,
@@ -32,7 +42,7 @@ public class CircleStatsViewHandler(IDbConnection dbConnection) :
 	}
 
 	public Task Handle(DomainEvent<CircleBetrayed> domainEvent) {
-		return dbConnection.ExecuteIdempotentTransaction(
+		return viewDb.ExecuteIdempotentTransaction(
 			transactionContext: TransactionContext,
 			transactionId: domainEvent.DomainMessageId,
 			sql: UpdateCircleStatsFromCircleBetrayedEvent,
