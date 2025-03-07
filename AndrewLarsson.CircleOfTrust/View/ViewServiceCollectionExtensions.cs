@@ -1,23 +1,24 @@
-﻿using AndrewLarsson.CircleOfTrust.Infrastructure;
-using AndrewLarsson.CircleOfTrust.Model;
+﻿using AndrewLarsson.CircleOfTrust.Domain;
+using AndrewLarsson.CircleOfTrust.Infrastructure;
 using developersBliss.OLDMAP.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Npgsql;
 
 namespace AndrewLarsson.CircleOfTrust.View;
-public static class ViewDbServiceCollectionExtensions {
-	public static IServiceCollection AddView(this IServiceCollection services) {
+public static class ViewServiceCollectionExtensions {
+	public static IServiceCollection AddCircleOfTrustView(this IServiceCollection services) {
 		services
-			.AddViewDb()
-			.AddDomainEventHandler<CircleClaimed, CircleStatsViewHandler>()
-			.AddDomainEventHandler<CircleJoined, CircleStatsViewHandler>()
-			.AddDomainEventHandler<CircleBetrayed, CircleStatsViewHandler>()
+			.AddCircleOfTrustViewDb()
+			.AddKafkaDomainEventApplication(Applications.View)
+			.AddDomainEventHandler<CircleClaimed, CircleStatsViewHandler>(Applications.View)
+			.AddDomainEventHandler<CircleJoined, CircleStatsViewHandler>(Applications.View)
+			.AddDomainEventHandler<CircleBetrayed, CircleStatsViewHandler>(Applications.View)
 		;
 		return services;
 	}
 
-	public static IServiceCollection AddViewDb(this IServiceCollection services) {
+	public static IServiceCollection AddCircleOfTrustViewDb(this IServiceCollection services) {
 		services.AddScoped(serviceProvider => {
 			var configuration = serviceProvider.GetRequiredService<IConfiguration>();
 			var connectionString = configuration.GetConnectionString("ViewDbPostgreSql");

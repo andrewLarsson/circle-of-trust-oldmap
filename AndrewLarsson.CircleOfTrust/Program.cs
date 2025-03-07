@@ -7,13 +7,10 @@ using Microsoft.Extensions.Hosting;
 HostApplicationBuilder applicationBuilder = Host.CreateApplicationBuilder();
 applicationBuilder.Services
 	.AddOLDMAP()
-	.AddKafkaDomainMessageApplication()
-	.AddKafkaDomainEventApplication()
-	.AddPostgreSqlMartenAggregateRootStorage()
 	.AddCircleOfTrust()
+	.AddCircleOfTrustView()
 	//.AddSampleCircleOfTrustSimulation()
-	.AddView()
-	.AddLargestCircleSimulation(noHandlers: true)
+	.AddLargestCircleSimulation()
 ;
 IHost host = applicationBuilder.Build();
 await host.RunAsync();

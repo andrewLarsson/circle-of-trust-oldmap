@@ -1,4 +1,4 @@
-﻿using AndrewLarsson.CircleOfTrust.Model;
+﻿using AndrewLarsson.CircleOfTrust.Domain;
 using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Serialization;

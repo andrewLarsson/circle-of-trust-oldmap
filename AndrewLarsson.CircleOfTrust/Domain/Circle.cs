@@ -1,4 +1,4 @@
-﻿namespace AndrewLarsson.CircleOfTrust.Model;
+﻿namespace AndrewLarsson.CircleOfTrust.Domain;
 public class Circle {
 	public string Title { get; }
 	public string Owner { get; }

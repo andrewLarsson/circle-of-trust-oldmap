@@ -1,6 +1,4 @@
-﻿using AndrewLarsson.CircleOfTrust.Model;
-
-namespace AndrewLarsson.CircleOfTrust.Application;
+﻿namespace AndrewLarsson.CircleOfTrust.Domain;
 public class CircleService {
 	public (Circle, ICircleEvent) ClaimCircle(
 		ClaimCircle message

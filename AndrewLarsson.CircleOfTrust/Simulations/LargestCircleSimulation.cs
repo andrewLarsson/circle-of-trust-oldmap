@@ -1,4 +1,4 @@
-﻿using AndrewLarsson.CircleOfTrust.Model;
+﻿using AndrewLarsson.CircleOfTrust.Domain;
 using developersBliss.OLDMAP.Hosting;
 using developersBliss.OLDMAP.Messaging;
 using Microsoft.Extensions.DependencyInjection;
@@ -107,6 +107,7 @@ public class LargestCircleSimulationEventHandler(
 	IDomainEventHandler<UserAlreadyMemberOfCircle> {
 	public static string lastDomainMessageId = "";
 	public static Stopwatch stopwatch = new();
+	public static bool stopApplicationWhenFinished = false;
 	public static readonly ConcurrentDictionary<string, uint> circleMemberCounts = [];
 
 	public Task Check<T>(DomainEvent<T> domainEvent) where T: notnull {
@@ -114,22 +115,23 @@ public class LargestCircleSimulationEventHandler(
 			stopwatch.Stop();
 			var elapsedSeconds = stopwatch.Elapsed.TotalSeconds;
 			logger.LogInformation("Last messaged received. Total seconds to process all messages: {elapsedSeconds}", elapsedSeconds);
-			applicationLifetime.StopApplication();
+			if (stopApplicationWhenFinished) {
+				applicationLifetime.StopApplication();
+			}
 		}
 		return Task.CompletedTask;
 	}
 
-	public Task Handle(DomainEvent<CircleJoined> domainEvent) {
-		var circleId = domainEvent.Address.AggregateRootId;
-		if (!circleMemberCounts.TryGetValue(circleId, out uint circleMemberCount)) {
-			circleMemberCount = 0;
-		}
-		circleMemberCount++;
-		circleMemberCounts[circleId] = circleMemberCount;
+	public Task Handle(DomainEvent<CircleClaimed> domainEvent) {
+		circleMemberCounts[domainEvent.Address.AggregateRootId] = 1;
 		return Check(domainEvent);
 	}
 
-	public Task Handle(DomainEvent<CircleClaimed> domainEvent) => Check(domainEvent);
+	public Task Handle(DomainEvent<CircleJoined> domainEvent) {
+		circleMemberCounts[domainEvent.Address.AggregateRootId] += 1;
+		return Check(domainEvent);
+	}
+
 	public Task Handle(DomainEvent<CircleBetrayed> domainEvent) => Check(domainEvent);
 	public Task Handle(DomainEvent<CircleAlreadyBetrayed> domainEvent) => Check(domainEvent);
 	public Task Handle(DomainEvent<KeyDoesNotUnlockCircle> domainEvent) => Check(domainEvent);
@@ -137,18 +139,17 @@ public class LargestCircleSimulationEventHandler(
 }
 
 public static class LargestCircleSimulationServiceCollectionExtensions {
-	public static IServiceCollection AddLargestCircleSimulation(this IServiceCollection services, bool noHandlers = false) {
-		services.AddHostedService<LargestCircleSimulation>();
-		if (noHandlers) {
-			return services;
-		}
+	public static IServiceCollection AddLargestCircleSimulation(this IServiceCollection services) {
 		services
-			.AddDomainEventHandler<CircleClaimed, LargestCircleSimulationEventHandler>()
-			.AddDomainEventHandler<CircleJoined, LargestCircleSimulationEventHandler>()
-			.AddDomainEventHandler<CircleBetrayed, LargestCircleSimulationEventHandler>()
-			.AddDomainEventHandler<CircleAlreadyBetrayed, LargestCircleSimulationEventHandler>()
-			.AddDomainEventHandler<KeyDoesNotUnlockCircle, LargestCircleSimulationEventHandler>()
-			.AddDomainEventHandler<UserAlreadyMemberOfCircle, LargestCircleSimulationEventHandler>()
+			.AddHostedService<LargestCircleSimulation>()
+			.TryAddKafkaDomainMessageSender()
+			.AddKafkaDomainEventApplication(Applications.LargestCircleSimulation)
+			.AddDomainEventHandler<CircleClaimed, LargestCircleSimulationEventHandler>(Applications.LargestCircleSimulation)
+			.AddDomainEventHandler<CircleJoined, LargestCircleSimulationEventHandler>(Applications.LargestCircleSimulation)
+			.AddDomainEventHandler<CircleBetrayed, LargestCircleSimulationEventHandler>(Applications.LargestCircleSimulation)
+			.AddDomainEventHandler<CircleAlreadyBetrayed, LargestCircleSimulationEventHandler>(Applications.LargestCircleSimulation)
+			.AddDomainEventHandler<KeyDoesNotUnlockCircle, LargestCircleSimulationEventHandler>(Applications.LargestCircleSimulation)
+			.AddDomainEventHandler<UserAlreadyMemberOfCircle, LargestCircleSimulationEventHandler>(Applications.LargestCircleSimulation)
 		;
 		return services;
 	}

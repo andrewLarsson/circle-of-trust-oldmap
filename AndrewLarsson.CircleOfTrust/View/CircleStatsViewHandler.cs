@@ -1,5 +1,5 @@
-﻿using AndrewLarsson.CircleOfTrust.Infrastructure;
-using AndrewLarsson.CircleOfTrust.Model;
+﻿using AndrewLarsson.CircleOfTrust.Domain;
+using AndrewLarsson.CircleOfTrust.Infrastructure;
 using developersBliss.OLDMAP.Messaging;
 
 namespace AndrewLarsson.CircleOfTrust.View;

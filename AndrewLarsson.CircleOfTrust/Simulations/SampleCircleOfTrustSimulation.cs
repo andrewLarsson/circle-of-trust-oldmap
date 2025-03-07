@@ -1,4 +1,5 @@
-﻿using AndrewLarsson.CircleOfTrust.Model;
+﻿using AndrewLarsson.CircleOfTrust.Domain;
+using developersBliss.OLDMAP.Hosting;
 using developersBliss.OLDMAP.Messaging;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -93,7 +94,10 @@ public class SampleCircleOfTrustSimulation(IDomainMessageSender domainMessageSen
 
 public static class SampleCircleOfTrustSimulationServiceCollectionExtensions {
 	public static IServiceCollection AddSampleCircleOfTrustSimulation(this IServiceCollection services) {
-		services.AddHostedService<SampleCircleOfTrustSimulation>();
+		services
+			.AddHostedService<SampleCircleOfTrustSimulation>()
+			.TryAddKafkaDomainMessageSender()
+		;
 		return services;
 	}
 }
