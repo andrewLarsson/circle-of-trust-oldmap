@@ -27,7 +27,6 @@ public class UserStatsViewHandler(ViewDbConnection viewDb) :
 		INSERT INTO UserStatsCircleMembers (UserIdCircleId, UserId, CircleId)
 		VALUES (CONCAT(@Member, '|', @AggregateRootId), @Member, @AggregateRootId);
 	";
-
 	static readonly string UpdateUserStatsFromCircleBetrayedEvent = @"
 		UPDATE UserStats SET
 			MemberOfNonbetrayedCircles = MemberOfNonbetrayedCircles - 1,

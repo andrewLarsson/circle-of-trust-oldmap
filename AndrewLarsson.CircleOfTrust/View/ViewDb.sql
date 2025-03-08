@@ -14,6 +14,7 @@ CREATE TABLE CircleStats (
 );
 CREATE INDEX IX_CircleStats_Owner ON CircleStats(Owner);
 CREATE INDEX IX_CircleStats_IsBetrayed ON CircleStats(IsBetrayed);
+CREATE INDEX IX_CircleStats_Members ON CircleStats(Members DESC);
 
 CREATE TABLE UserStats (
 	UserId VARCHAR(255) PRIMARY KEY,
@@ -32,10 +33,9 @@ CREATE TABLE UserStatsCircleMembers (
 CREATE INDEX IX_UserStatsCircleMembers_UserId ON UserStatsCircleMembers(UserId);
 CREATE INDEX IX_UserStatsCircleMembers_CircleId ON UserStatsCircleMembers(CircleId);
 
-CREATE TABLE CircleLeaderboardContender (
-	CircleLeaderboardContenderId SERIAL PRIMARY KEY, -- Auto-incrementing primary key
-	CircleId UUID NOT NULL,
-	Members INT NOT NULL
+CREATE VIEW CircleLeaderboard AS (
+	SELECT *
+	FROM CircleStats
+	ORDER BY Members DESC
+	LIMIT 100
 );
-CREATE INDEX IX_CircleLeaderboardContender_CircleId ON CircleLeaderboardContender(CircleId);
-CREATE INDEX IX_CircleLeaderboardContender_Members ON CircleLeaderboardContender(Members);
