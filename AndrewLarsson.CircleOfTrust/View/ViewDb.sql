@@ -5,16 +5,6 @@ CREATE TABLE IdempotentTransactions (
 	IdempotencyKey VARCHAR(255) PRIMARY KEY
 );
 
-CREATE TABLE PlayerStats (
-	PlayerId UUID PRIMARY KEY,
-	Username VARCHAR(255) NOT NULL,
-	HasCircle BOOLEAN NOT NULL,
-	MemberOfCircles INT NOT NULL,
-	BetrayedCircles INT NOT NULL
-);
-CREATE INDEX IX_PlayerStats_Username ON PlayerStats(Username);
-CREATE INDEX IX_PlayerStats_HasCircle ON PlayerStats(HasCircle);
-
 CREATE TABLE CircleStats (
 	CircleId VARCHAR(255) PRIMARY KEY,
 	Title TEXT NOT NULL,
@@ -24,6 +14,23 @@ CREATE TABLE CircleStats (
 );
 CREATE INDEX IX_CircleStats_Owner ON CircleStats(Owner);
 CREATE INDEX IX_CircleStats_IsBetrayed ON CircleStats(IsBetrayed);
+
+CREATE TABLE UserStats (
+	UserId VARCHAR(255) PRIMARY KEY,
+	CircleId VARCHAR(255) NOT NULL,
+	MemberOfCircles INT NOT NULL,
+	MemberOfNonbetrayedCircles INT NOT NULL,
+	MemberOfBetrayedCircles INT NOT NULL
+);
+CREATE INDEX IX_UserStats_CircleId ON UserStats(CircleId);
+
+CREATE TABLE UserStatsCircleMembers (
+	UserIdCircleId VARCHAR(255) PRIMARY KEY,
+	UserId VARCHAR(255) NOT NULL,
+	CircleId VARCHAR(255) NOT NULL
+);
+CREATE INDEX IX_UserStatsCircleMembers_UserId ON UserStatsCircleMembers(UserId);
+CREATE INDEX IX_UserStatsCircleMembers_CircleId ON UserStatsCircleMembers(CircleId);
 
 CREATE TABLE CircleLeaderboardContender (
 	CircleLeaderboardContenderId SERIAL PRIMARY KEY, -- Auto-incrementing primary key

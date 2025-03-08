@@ -128,7 +128,9 @@ public class LargestCircleSimulationEventHandler(
 	}
 
 	public Task Handle(DomainEvent<CircleJoined> domainEvent) {
-		circleMemberCounts[domainEvent.Address.AggregateRootId] += 1;
+		if (circleMemberCounts.ContainsKey(domainEvent.Address.AggregateRootId)) {
+			circleMemberCounts[domainEvent.Address.AggregateRootId] += 1;
+		}
 		return Check(domainEvent);
 	}
 

@@ -9,17 +9,17 @@ public class CircleStatsViewHandler(ViewDbConnection viewDb) :
 	IDomainEventHandler<CircleBetrayed> {
 	static readonly string TransactionContext = "CircleStats";
 	static readonly string InsertCircleStatsFromCircleClaimedEvent = @"
-		INSERT INTO CircleStats (CircleId, Title, Owner, IsBetrayed, Members) 
+		INSERT INTO CircleStats (CircleId, Title, Owner, IsBetrayed, Members)
 		VALUES (@AggregateRootId, @Title, @Owner, FALSE, 1);
 	";
 	static readonly string UpdateCircleStatsFromCircleJoinedEvent = @"
-		UPDATE CircleStats 
-		SET Members = Members + 1 
+		UPDATE CircleStats SET
+			Members = Members + 1
 		WHERE CircleId = @AggregateRootId;
 	";
 	static readonly string UpdateCircleStatsFromCircleBetrayedEvent = @"
-		UPDATE CircleStats 
-		SET IsBetrayed = TRUE 
+		UPDATE CircleStats SET
+			IsBetrayed = TRUE
 		WHERE CircleId = @AggregateRootId;
 	";
 

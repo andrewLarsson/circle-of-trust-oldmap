@@ -10,10 +10,28 @@ public static class ViewServiceCollectionExtensions {
 	public static IServiceCollection AddCircleOfTrustView(this IServiceCollection services) {
 		services
 			.AddCircleOfTrustViewDb()
-			.AddKafkaDomainEventApplication(Applications.View)
-			.AddDomainEventHandler<CircleClaimed, CircleStatsViewHandler>(Applications.View)
-			.AddDomainEventHandler<CircleJoined, CircleStatsViewHandler>(Applications.View)
-			.AddDomainEventHandler<CircleBetrayed, CircleStatsViewHandler>(Applications.View)
+			.AddCircleOfTrustViewCircleStats()
+			.AddCircleOfTrustViewUserStats()
+		;
+		return services;
+	}
+
+	public static IServiceCollection AddCircleOfTrustViewCircleStats(this IServiceCollection services) {
+		services
+			.AddKafkaDomainEventApplication(Applications.ViewCircleStats)
+			.AddDomainEventHandler<CircleClaimed, CircleStatsViewHandler>(Applications.ViewCircleStats)
+			.AddDomainEventHandler<CircleJoined, CircleStatsViewHandler>(Applications.ViewCircleStats)
+			.AddDomainEventHandler<CircleBetrayed, CircleStatsViewHandler>(Applications.ViewCircleStats)
+		;
+		return services;
+	}
+
+	public static IServiceCollection AddCircleOfTrustViewUserStats(this IServiceCollection services) {
+		services
+			.AddKafkaDomainEventApplication(Applications.ViewUserStats)
+			.AddDomainEventHandler<CircleClaimed, UserStatsViewHandler>(Applications.ViewUserStats)
+			.AddDomainEventHandler<CircleJoined, UserStatsViewHandler>(Applications.ViewUserStats)
+			.AddDomainEventHandler<CircleBetrayed, UserStatsViewHandler>(Applications.ViewUserStats)
 		;
 		return services;
 	}
