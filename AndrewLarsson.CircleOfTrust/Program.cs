@@ -1,4 +1,4 @@
-﻿using AndrewLarsson.CircleOfTrust.Hosting;
+﻿using AndrewLarsson.CircleOfTrust.Domain;
 using AndrewLarsson.CircleOfTrust.Simulations;
 using AndrewLarsson.CircleOfTrust.View;
 using developersBliss.OLDMAP.Hosting;

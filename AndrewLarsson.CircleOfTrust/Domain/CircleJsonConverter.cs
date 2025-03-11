@@ -1,9 +1,8 @@
-﻿using AndrewLarsson.CircleOfTrust.Domain;
-using System.Reflection;
+﻿using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace AndrewLarsson.CircleOfTrust.Infrastructure;
+namespace AndrewLarsson.CircleOfTrust.Domain;
 public class CircleJsonConverter : JsonConverter<Circle> {
 	public override Circle Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) {
 		var json = JsonDocument.ParseValue(ref reader).RootElement;

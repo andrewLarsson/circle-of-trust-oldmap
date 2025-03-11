@@ -1,5 +1,4 @@
 ﻿using AndrewLarsson.CircleOfTrust.Domain;
-using AndrewLarsson.CircleOfTrust.Infrastructure;
 using Dapper;
 using developersBliss.OLDMAP.Messaging;
 

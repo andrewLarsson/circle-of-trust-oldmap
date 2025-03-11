@@ -1,10 +1,8 @@
-﻿using AndrewLarsson.CircleOfTrust.Domain;
-using AndrewLarsson.CircleOfTrust.Infrastructure;
-using developersBliss.OLDMAP.Hosting;
+﻿using developersBliss.OLDMAP.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using System.Text.Json.Serialization;
 
-namespace AndrewLarsson.CircleOfTrust.Hosting;
+namespace AndrewLarsson.CircleOfTrust.Domain;
 public static class CircleOfTrustServiceCollectionExtensions {
 	public static IServiceCollection AddCircleOfTrust(this IServiceCollection services) {
 		services

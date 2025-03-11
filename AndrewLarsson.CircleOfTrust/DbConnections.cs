@@ -1,8 +1,8 @@
 ﻿using System.Data;
 using System.Diagnostics.CodeAnalysis;
 
-namespace AndrewLarsson.CircleOfTrust.Infrastructure;
-
+namespace AndrewLarsson.CircleOfTrust;
+// TODO Move this to some kind of common library AndrewLarsson.Common?...
 public abstract class NamedDbConnection(IDbConnection connection) : IDbConnection {
 	[AllowNull]
 	public string ConnectionString {
