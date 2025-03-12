@@ -4,7 +4,7 @@ namespace AndrewLarsson.CircleOfTrust.Host;
 public static class CircleOfTrustHostServiceCollectionExtensions {
 	public static IServiceCollection AddCircleOfTrustHost(this IServiceCollection services) {
 		services
-			.TryAddKafkaDomainMessageSender()
+			.AddKafkaDomainRequester()
 		;
 		return services;
 	}
