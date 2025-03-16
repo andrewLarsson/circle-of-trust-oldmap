@@ -3,6 +3,8 @@ using AndrewLarsson.CircleOfTrust.Host;
 using AndrewLarsson.CircleOfTrust.Simulations;
 using AndrewLarsson.CircleOfTrust.View;
 using developersBliss.OLDMAP.Hosting;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 using System.Text.Json.Serialization;
 
 var applicationBuilder = WebApplication.CreateBuilder(args);
@@ -13,6 +15,22 @@ applicationBuilder.Services.AddControllers().AddJsonOptions(opts => {
 });
 applicationBuilder.Services.AddEndpointsApiExplorer();
 applicationBuilder.Services.AddSwaggerGen();
+
+/* Begin Authentication */
+applicationBuilder.Services
+	.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+	.AddJwtBearer(options => {
+		options.Authority = "https://accounts.google.com";
+		options.TokenValidationParameters = new TokenValidationParameters {
+			ValidateIssuer = true,
+			ValidIssuer = "https://accounts.google.com",
+			ValidateAudience = true,
+			ValidAudience = applicationBuilder.Configuration["Authentication:GoogleClientId"],
+			ValidateLifetime = true
+		};
+	});
+applicationBuilder.Services.AddAuthorization();
+/* End Authentication */
 
 /* Begin Application Services */
 applicationBuilder.Services
@@ -36,6 +54,7 @@ if (application.Environment.IsDevelopment()) {
 }
 
 application.UseHttpsRedirection();
+application.UseAuthentication();
 application.UseAuthorization();
 application.MapControllers();
 application.MapFallbackToFile("/index.html");

@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AndrewLarsson.CircleOfTrust
 EndProject
 Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "AndrewLarsson.CircleOfTrust.Client", "AndrewLarsson.CircleOfTrust.Client\AndrewLarsson.CircleOfTrust.Client.esproj", "{B495EFFD-7EF0-3B4F-34D6-9A0F4AA4DFEB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AndrewLarsson.CircleOfTrust.Admin", "AndrewLarsson.CircleOfTrust.Admin\AndrewLarsson.CircleOfTrust.Admin.csproj", "{7410BD91-D559-4AE6-9D3A-3A03D4DC7EB5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -47,6 +49,10 @@ Global
 		{B495EFFD-7EF0-3B4F-34D6-9A0F4AA4DFEB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B495EFFD-7EF0-3B4F-34D6-9A0F4AA4DFEB}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B495EFFD-7EF0-3B4F-34D6-9A0F4AA4DFEB}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{7410BD91-D559-4AE6-9D3A-3A03D4DC7EB5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7410BD91-D559-4AE6-9D3A-3A03D4DC7EB5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7410BD91-D559-4AE6-9D3A-3A03D4DC7EB5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7410BD91-D559-4AE6-9D3A-3A03D4DC7EB5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
