@@ -8,9 +8,17 @@ public class UserStatsViewHandler(ViewDbConnection viewDb) :
 	IDomainEventHandler<CircleJoined>,
 	IDomainEventHandler<CircleBetrayed> {
 	static readonly string TransactionContext = "UserStats";
-	static readonly string InsertUserStatsFromCircleClaimedEvent = @"
+	static readonly string TryInsertUserStats = @"
 		INSERT INTO UserStats (UserId, CircleId, MemberOfCircles, MemberOfNonbetrayedCircles, MemberOfBetrayedCircles)
-		VALUES (@Owner, @AggregateRootId, 1, 1, 0);
+		VALUES (@UserId, NULL, 0, 0, 0)
+		ON CONFLICT (UserId) DO NOTHING;
+	";
+	static readonly string UpdateUserStatsFromCircleClaimedEvent = @"
+		UPDATE UserStats SET
+			CircleId = @AggregateRootId,
+			MemberOfCircles = MemberOfCircles + 1,
+			MemberOfNonbetrayedCircles = MemberOfNonbetrayedCircles + 1
+		WHERE UserId = @Owner;
 	";
 	static readonly string InsertUserStatsCircleMembersFromCircleClaimedEvent = @"
 		INSERT INTO UserStatsCircleMembers (UserIdCircleId, UserId, CircleId)
@@ -41,7 +49,8 @@ public class UserStatsViewHandler(ViewDbConnection viewDb) :
 			transactionContext: TransactionContext,
 			transactionId: domainEvent.DomainMessageId,
 			async (transaction) => {
-				await viewDb.ExecuteAsync(InsertUserStatsFromCircleClaimedEvent, param, transaction);
+				await viewDb.ExecuteAsync(TryInsertUserStats, new { UserId = domainEvent.Body.Owner }, transaction);
+				await viewDb.ExecuteAsync(UpdateUserStatsFromCircleClaimedEvent, param, transaction);
 				await viewDb.ExecuteAsync(InsertUserStatsCircleMembersFromCircleClaimedEvent, param, transaction);
 			}
 		);
@@ -53,6 +62,7 @@ public class UserStatsViewHandler(ViewDbConnection viewDb) :
 			transactionContext: TransactionContext,
 			transactionId: domainEvent.DomainMessageId,
 			async (transaction) => {
+				await viewDb.ExecuteAsync(TryInsertUserStats, new { UserId = domainEvent.Body.Member }, transaction);
 				await viewDb.ExecuteAsync(UpdateUserStatsFromCircleJoinedEvent, param, transaction);
 				await viewDb.ExecuteAsync(InsertUserStatsCircleMembersFromCircleJoinedEvent, param, transaction);
 			}

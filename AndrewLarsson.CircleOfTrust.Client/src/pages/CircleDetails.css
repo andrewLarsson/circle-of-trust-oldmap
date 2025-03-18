@@ -1,0 +1,40 @@
+/* Container for circle details */
+.circle-details {
+	padding: 20px;
+	max-width: 400px;
+	margin: 20px auto;
+	background-color: #f9f9f9;
+	border-radius: 8px;
+	box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Title */
+.title {
+	font-size: 1.5rem;
+	font-weight: bold;
+	margin-bottom: 16px;
+}
+
+/* Loading text */
+.loading-text {
+	text-align: center;
+	font-size: 1rem;
+	color: #666;
+}
+
+/* Back button */
+.back-button {
+	display: block;
+	margin-top: 16px;
+	padding: 10px 16px;
+	background-color: #007bff;
+	color: white;
+	border: none;
+	border-radius: 4px;
+	font-size: 1rem;
+	cursor: pointer;
+	transition: background-color 0.3s;
+}
+.back-button:hover {
+	background-color: #0056b3;
+}

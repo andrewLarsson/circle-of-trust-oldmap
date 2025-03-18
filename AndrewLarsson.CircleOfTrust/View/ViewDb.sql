@@ -18,7 +18,7 @@ CREATE INDEX IX_CircleStats_Members ON CircleStats(Members DESC);
 
 CREATE TABLE UserStats (
 	UserId VARCHAR(255) PRIMARY KEY,
-	CircleId VARCHAR(255) NOT NULL,
+	CircleId VARCHAR(255),
 	MemberOfCircles INT NOT NULL,
 	MemberOfNonbetrayedCircles INT NOT NULL,
 	MemberOfBetrayedCircles INT NOT NULL

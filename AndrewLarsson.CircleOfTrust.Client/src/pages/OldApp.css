@@ -1,0 +1,55 @@
+/* General Layout */
+.container {
+	padding: 16px;
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+}
+
+/* Title */
+.title {
+	font-size: 1.5rem;
+	font-weight: bold;
+}
+
+/* Card (Container for Inputs & Button) */
+.card {
+	border: 1px solid #ddd;
+	padding: 20px;
+	border-radius: 8px;
+	background-color: #f9f9f9;
+	max-width: 600px; /* Set max width */
+	box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Card Title */
+.card-title {
+	font-weight: 600;
+	margin-bottom: 8px;
+}
+
+/* Input Fields */
+.input, .button {
+	width: 90%; /* Makes inputs/buttons wider inside the card */
+	padding: 12px; /* More padding for readability */
+	font-size: 1rem; /* Makes text easier to read */
+	display: block;
+	margin: 10px auto; /* Centers inside the card */
+	border-radius: 6px;
+}
+
+/* Buttons */
+.button {
+	color: white;
+	border: none;
+	cursor: pointer;
+}
+
+.button-green { background-color: #4caf50; }
+.button-green:hover { background-color: #388e3c; }
+
+.button-yellow { background-color: #fbc02d; }
+.button-yellow:hover { background-color: #f9a825; }
+
+.button-red { background-color: #d32f2f; }
+.button-red:hover { background-color: #b71c1c; }

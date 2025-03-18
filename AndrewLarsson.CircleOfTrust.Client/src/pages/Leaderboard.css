@@ -1,0 +1,52 @@
+/* Container styles */
+.leaderboard-container {
+	padding: 20px;
+	max-width: 800px;
+	margin: 0 auto;
+	background-color: #f9f9f9;
+	border-radius: 8px;
+	box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Title styling */
+.leaderboard-title {
+	font-size: 1.5rem;
+	font-weight: bold;
+	margin-bottom: 16px;
+	text-align: center;
+}
+
+/* Loading text */
+.loading-text {
+	text-align: center;
+	font-size: 1rem;
+	color: #666;
+}
+
+/* Table styling */
+.leaderboard-table {
+	width: 100%;
+	border-collapse: collapse;
+	background: white;
+	border: 1px solid #ccc;
+}
+
+/* Table header */
+.leaderboard-table thead tr {
+	background-color: #e0e0e0;
+}
+.leaderboard-table th,
+.leaderboard-table td {
+	border: 1px solid #ccc;
+	padding: 10px;
+	text-align: left;
+}
+
+/* Clickable rows */
+.clickable-row {
+	cursor: pointer;
+	transition: background-color 0.2s;
+}
+.clickable-row:hover {
+	background-color: #f0f0f0;
+}
