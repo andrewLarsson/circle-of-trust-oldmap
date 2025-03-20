@@ -9,7 +9,7 @@ const Layout = ({ children }: { children: React.ReactNode }): JSX.Element => {
 				<h1 className="logo">Circle of Trust</h1>
 				<div className="nav-links">
 					<Link to="/" className="nav-item">Leaderboard</Link>
-					<Link to="/app" className="nav-item">App</Link>
+					<Link to="/actions" className="nav-item">Actions</Link>
 				</div>
 			</nav>
 

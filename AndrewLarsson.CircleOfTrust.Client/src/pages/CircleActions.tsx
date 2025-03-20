@@ -1,20 +1,8 @@
-import { SignIn } from "../auth/SignIn";
 import { useAuth } from "../auth/useAuth";
-import "./OldApp.css";
-
-const OldApp = (): JSX.Element => {
-	return (
-		<div className="container">
-			<SignIn />
-			<CircleActions />
-		</div>
-	);
-};
-
-export default OldApp;
+import "./CircleActions.css";
 
 const CircleActions = (): JSX.Element => {
-	const { authenticationToken, isAuthenticated } = useAuth();
+	const { authenticationToken } = useAuth();
 
 	const handleRequest = async (endpoint: string, payload: Record<string, string>): Promise<void> => {
 		const requestId = crypto.randomUUID().replace(/-/g, "");
@@ -25,7 +13,6 @@ const CircleActions = (): JSX.Element => {
 		});
 	};
 
-	if (!isAuthenticated) return <></>;
 	return (
 		<>
 			{/* Claim Circle */}
@@ -84,3 +71,5 @@ const CircleActions = (): JSX.Element => {
 		</>
 	);
 };
+
+export default CircleActions;

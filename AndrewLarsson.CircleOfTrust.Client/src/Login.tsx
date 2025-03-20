@@ -1,9 +1,19 @@
 import { useState, useEffect } from "react";
-import { useAuth } from './useAuth';
+import { useAuth } from './auth/useAuth';
+import { useNavigate } from "react-router-dom";
+import "./Login.css";
 
-export const SignIn = (): JSX.Element => {
+const Login = (): JSX.Element => {
     const { setAuthenticationToken, isAuthenticated } = useAuth();
-    const [googleLoaded, setGoogleLoaded] = useState(false);
+	const [googleLoaded, setGoogleLoaded] = useState(false);
+	const navigate = useNavigate();
+
+	// Redirect immediately if already authenticated
+	useEffect(() => {
+		if (isAuthenticated) {
+			navigate("/", { replace: true });
+		}
+	}, [isAuthenticated, navigate]);
 
     useEffect(() => {
         const script = document.createElement("script");
@@ -23,7 +33,10 @@ export const SignIn = (): JSX.Element => {
         if (googleLoaded && window.google?.accounts) {
             window.google.accounts.id.initialize({
                 client_id: "68033942219-fshhuhthacrvi256dmca0ok4relukd76.apps.googleusercontent.com",
-                callback: (response: google.accounts.id.CredentialResponse) => setAuthenticationToken(response.credential),
+				callback: (response: google.accounts.id.CredentialResponse) => {
+					setAuthenticationToken(response.credential);
+					navigate("/", { replace: true });
+				}
             });
             const buttonContainer = document.getElementById("google-signin-btn");
             if (buttonContainer) {
@@ -33,13 +46,15 @@ export const SignIn = (): JSX.Element => {
                 );
             }
         }
-    }, [googleLoaded, setAuthenticationToken]);
+    }, [googleLoaded, setAuthenticationToken, navigate]);
 
-    if (isAuthenticated) return <></>;
-    return (
-        <div className="border p-4 rounded-lg">
-            <h2 className="font-semibold">Sign In</h2>
-            <div id="google-signin-btn"></div>
-        </div>
-    );
+	if (isAuthenticated) return <></>;
+	return (
+		<div className="login-container">
+			<h2 className="login-title">Login</h2>
+			<div id="google-signin-btn"></div>
+		</div>
+	);
 };
+
+export default Login;
