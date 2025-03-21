@@ -1,4 +1,4 @@
-.circle-details {
+.claim-circle {
 	max-width: 600px;
 	margin: 2rem auto;
 	padding: 2rem;
@@ -13,24 +13,6 @@
 	margin-bottom: 1rem;
 	text-align: center;
 	color: #333;
-}
-
-p {
-	margin: 0.5rem 0;
-	font-size: 1rem;
-}
-
-.back-button {
-	margin-top: 2rem;
-	padding: 0.5rem 1.2rem;
-	background-color: #ddd;
-	border: none;
-	border-radius: 8px;
-	cursor: pointer;
-	font-weight: bold;
-}
-.back-button:hover {
-	background-color: #ccc;
 }
 
 .action-form {
@@ -56,6 +38,7 @@ p {
 	cursor: pointer;
 	font-weight: bold;
 	font-size: 1rem;
+	width: 100%;
 }
 
 .button-yellow {
@@ -65,12 +48,18 @@ p {
 	background-color: #eab308;
 }
 
-.button-red {
-	background-color: #ef4444;
-	color: white;
+.back-button {
+	margin-top: 1.5rem;
+	padding: 0.5rem;
+	background-color: #ddd;
+	border: none;
+	border-radius: 8px;
+	cursor: pointer;
+	font-weight: bold;
+	width: 100%;
 }
-.button-red:hover {
-	background-color: #dc2626;
+.back-button:hover {
+	background-color: #ccc;
 }
 
 .action-result {
@@ -81,10 +70,4 @@ p {
 	text-align: center;
 	background-color: #f0f0f0;
 	color: #333;
-}
-
-.loading-text {
-	text-align: center;
-	font-size: 1.2rem;
-	padding: 2rem;
 }
