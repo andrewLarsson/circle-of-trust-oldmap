@@ -3,8 +3,11 @@ using developersBliss.OLDMAP.Application;
 using developersBliss.OLDMAP.Messaging;
 
 namespace AndrewLarsson.CircleOfTrust.View;
-public class CircleStatsViewHandler(Context<Synchronization> synchronizationContext, ViewDbConnection viewDb) :
-	IDomainEventHandler<CircleClaimed>,
+public class CircleStatsViewHandler(
+	ApplicationContext applicationContext,
+	Context<Synchronization> synchronizationContext,
+	ViewDbConnection viewDb
+) : IDomainEventHandler<CircleClaimed>,
 	IDomainEventHandler<CircleJoined>,
 	IDomainEventHandler<CircleBetrayed> {
 	static readonly string InsertCircleStatsFromCircleClaimedEvent = @"
@@ -24,7 +27,7 @@ public class CircleStatsViewHandler(Context<Synchronization> synchronizationCont
 
 	public Task Handle(DomainEvent<CircleClaimed> domainEvent) {
 		return viewDb.ExecuteIdempotentTransactionWithSynchronization(
-			application: Applications.CircleStatsView,
+			application: applicationContext._.Name,
 			transactionId: domainEvent.DomainMessageId,
 			synchronization: synchronizationContext,
 			sql: InsertCircleStatsFromCircleClaimedEvent,
@@ -34,7 +37,7 @@ public class CircleStatsViewHandler(Context<Synchronization> synchronizationCont
 
 	public Task Handle(DomainEvent<CircleJoined> domainEvent) {
 		return viewDb.ExecuteIdempotentTransactionWithSynchronization(
-			application: Applications.CircleStatsView,
+			application: applicationContext._.Name,
 			transactionId: domainEvent.DomainMessageId,
 			synchronization: synchronizationContext,
 			sql: UpdateCircleStatsFromCircleJoinedEvent,
@@ -44,7 +47,7 @@ public class CircleStatsViewHandler(Context<Synchronization> synchronizationCont
 
 	public Task Handle(DomainEvent<CircleBetrayed> domainEvent) {
 		return viewDb.ExecuteIdempotentTransactionWithSynchronization(
-			application: Applications.CircleStatsView,
+			application: applicationContext._.Name,
 			transactionId: domainEvent.DomainMessageId,
 			synchronization: synchronizationContext,
 			sql: UpdateCircleStatsFromCircleBetrayedEvent,

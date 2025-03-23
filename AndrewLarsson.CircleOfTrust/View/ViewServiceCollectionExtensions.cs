@@ -1,6 +1,7 @@
 ﻿using AndrewLarsson.CircleOfTrust.Domain;
 using developersBliss.OLDMAP.Application;
 using developersBliss.OLDMAP.Hosting;
+using developersBliss.OLDMAP.Messaging;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Npgsql;
@@ -10,9 +11,17 @@ public static class ViewServiceCollectionExtensions {
 	public static IServiceCollection AddCircleOfTrustView(this IServiceCollection services) {
 		services
 			.AddCircleOfTrustViewDb()
+			.AddCircleOfTrustViewDefaultEventHandler()
 			.AddCircleOfTrustViewCircleStats()
 			.AddCircleOfTrustViewUserStats()
 			.AddCircleOfTrustViewDapperSynchronizationObserver()
+		;
+		return services;
+	}
+
+	public static IServiceCollection AddCircleOfTrustViewDefaultEventHandler(this IServiceCollection services) {
+		services
+			.AddScoped<IDefaultDomainEventHandler, CircleOfTrustViewDefaultHandler>()
 		;
 		return services;
 	}
