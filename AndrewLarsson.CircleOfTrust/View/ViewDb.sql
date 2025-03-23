@@ -5,6 +5,11 @@ CREATE TABLE IdempotentTransactions (
 	IdempotencyKey VARCHAR(255) PRIMARY KEY
 );
 
+CREATE TABLE SynchronizationContexts (
+	SynchronizationContext VARCHAR(255) PRIMARY KEY,
+	SynchronizationPosition BIGINT NOT NULL
+);
+
 CREATE TABLE CircleStats (
 	CircleId VARCHAR(255) PRIMARY KEY,
 	Title TEXT NOT NULL,

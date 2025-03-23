@@ -1,13 +1,13 @@
 ﻿using AndrewLarsson.CircleOfTrust.Domain;
 using Dapper;
+using developersBliss.OLDMAP.Application;
 using developersBliss.OLDMAP.Messaging;
 
 namespace AndrewLarsson.CircleOfTrust.View;
-public class UserStatsViewHandler(ViewDbConnection viewDb) :
+public class UserStatsViewHandler(Context<Synchronization> synchronizationContext, ViewDbConnection viewDb) :
 	IDomainEventHandler<CircleClaimed>,
 	IDomainEventHandler<CircleJoined>,
 	IDomainEventHandler<CircleBetrayed> {
-	static readonly string TransactionContext = "UserStats";
 	static readonly string TryInsertUserStats = @"
 		INSERT INTO UserStats (UserId, CircleId, MemberOfCircles, MemberOfNonbetrayedCircles, MemberOfBetrayedCircles)
 		VALUES (@UserId, NULL, 0, 0, 0)
@@ -45,9 +45,10 @@ public class UserStatsViewHandler(ViewDbConnection viewDb) :
 
 	public Task Handle(DomainEvent<CircleClaimed> domainEvent) {
 		var param = domainEvent.ToParameters();
-		return viewDb.ExecuteIdempotentTransaction(
-			transactionContext: TransactionContext,
+		return viewDb.ExecuteIdempotentTransactionWithSynchronization(
+			application: Applications.UserStatsView,
 			transactionId: domainEvent.DomainMessageId,
+			synchronization: synchronizationContext,
 			async (transaction) => {
 				await viewDb.ExecuteAsync(TryInsertUserStats, new { UserId = domainEvent.Body.Owner }, transaction);
 				await viewDb.ExecuteAsync(UpdateUserStatsFromCircleClaimedEvent, param, transaction);
@@ -58,9 +59,10 @@ public class UserStatsViewHandler(ViewDbConnection viewDb) :
 
 	public Task Handle(DomainEvent<CircleJoined> domainEvent) {
 		var param = domainEvent.ToParameters();
-		return viewDb.ExecuteIdempotentTransaction(
-			transactionContext: TransactionContext,
+		return viewDb.ExecuteIdempotentTransactionWithSynchronization(
+			application: Applications.UserStatsView,
 			transactionId: domainEvent.DomainMessageId,
+			synchronization: synchronizationContext,
 			async (transaction) => {
 				await viewDb.ExecuteAsync(TryInsertUserStats, new { UserId = domainEvent.Body.Member }, transaction);
 				await viewDb.ExecuteAsync(UpdateUserStatsFromCircleJoinedEvent, param, transaction);
@@ -70,9 +72,10 @@ public class UserStatsViewHandler(ViewDbConnection viewDb) :
 	}
 
 	public Task Handle(DomainEvent<CircleBetrayed> domainEvent) {
-		return viewDb.ExecuteIdempotentTransaction(
-			transactionContext: TransactionContext,
+		return viewDb.ExecuteIdempotentTransactionWithSynchronization(
+			application: Applications.UserStatsView,
 			transactionId: domainEvent.DomainMessageId,
+			synchronization: synchronizationContext,
 			sql: UpdateUserStatsFromCircleBetrayedEvent,
 			param: domainEvent.ToParameters()
 		);

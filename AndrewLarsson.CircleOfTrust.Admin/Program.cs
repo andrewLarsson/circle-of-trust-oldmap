@@ -8,6 +8,7 @@ List<(string, string)> postgreSqlTables = [
 	("Host=localhost;Port=5432;Username=postgres;Password=password;Database=CircleOfTrustView", "public.circlestats"),
 	("Host=localhost;Port=5432;Username=postgres;Password=password;Database=CircleOfTrustView", "public.userstats"),
 	("Host=localhost;Port=5432;Username=postgres;Password=password;Database=CircleOfTrustView", "public.userstatscirclemembers"),
+	("Host=localhost;Port=5432;Username=postgres;Password=password;Database=CircleOfTrustView", "public.synchronizationcontexts"),
 	("Host=localhost;Port=5432;Username=postgres;Password=password;Database=CircleOfTrustView", "public.idempotenttransactions"),
 ];
 
@@ -32,3 +33,5 @@ async Task DeleteEverything() {
 		await PostgreSqlAdmin.DeleteAllRecordsFromTable(connectionString, table);
 	}
 }
+
+// TODO Add "initialize everything" command (creates the database and the Kafka topics)

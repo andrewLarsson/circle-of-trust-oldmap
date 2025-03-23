@@ -16,11 +16,12 @@ public class CircleOfTrustController(
 	[HttpPost("claim-circle")]
 	public async Task<PackedDomainEvent> ClaimCircle(string requestId, string title, string secretKey) {
 		string userId = User.UserId();
-		PackedDomainEvent response = await domainRequester.Request(domainMessagePacker.PackMessage(
+		(PackedDomainEvent response, string synchronizationToken) = await domainRequester.RequestWithSynchronization(domainMessagePacker.PackMessage(
 			domainMessageId: requestId,
 			address: CircleAddress.For(userId),
 			domainMessage: new ClaimCircle(title, userId, secretKey)
 		));
+		Response.Headers.Append(Headers.SynchronizationToken, synchronizationToken);
 		return response;
 	}
 
@@ -28,11 +29,12 @@ public class CircleOfTrustController(
 	[HttpPost("join-circle")]
 	public async Task<PackedDomainEvent> JoinCircle(string requestId, string circleId, string secretKey) {
 		string userId = User.UserId();
-		PackedDomainEvent response = await domainRequester.Request(domainMessagePacker.PackMessage(
+		(PackedDomainEvent response, string synchronizationToken) = await domainRequester.RequestWithSynchronization(domainMessagePacker.PackMessage(
 			domainMessageId: requestId,
 			address: CircleAddress.For(circleId),
 			domainMessage: new JoinCircle(userId, secretKey)
 		));
+		Response.Headers.Append(Headers.SynchronizationToken, synchronizationToken);
 		return response;
 	}
 
@@ -40,11 +42,12 @@ public class CircleOfTrustController(
 	[HttpPost("betray-circle")]
 	public async Task<PackedDomainEvent> BetrayCircle(string requestId, string circleId, string secretKey) {
 		string userId = User.UserId();
-		PackedDomainEvent response = await domainRequester.Request(domainMessagePacker.PackMessage(
+		(PackedDomainEvent response, string synchronizationToken) = await domainRequester.RequestWithSynchronization(domainMessagePacker.PackMessage(
 			domainMessageId: requestId,
 			address: CircleAddress.For(circleId),
 			domainMessage: new BetrayCircle(userId, secretKey)
 		));
+		Response.Headers.Append(Headers.SynchronizationToken, synchronizationToken);
 		return response;
 	}
 }

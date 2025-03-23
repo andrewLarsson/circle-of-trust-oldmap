@@ -1,4 +1,5 @@
 ﻿using AndrewLarsson.CircleOfTrust.Domain;
+using developersBliss.OLDMAP.Application;
 using developersBliss.OLDMAP.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,26 +12,27 @@ public static class ViewServiceCollectionExtensions {
 			.AddCircleOfTrustViewDb()
 			.AddCircleOfTrustViewCircleStats()
 			.AddCircleOfTrustViewUserStats()
+			.AddCircleOfTrustViewDapperSynchronizationObserver()
 		;
 		return services;
 	}
 
 	public static IServiceCollection AddCircleOfTrustViewCircleStats(this IServiceCollection services) {
 		services
-			.AddKafkaDomainEventApplication(Applications.ViewCircleStats)
-			.AddDomainEventHandler<CircleClaimed, CircleStatsViewHandler>(Applications.ViewCircleStats)
-			.AddDomainEventHandler<CircleJoined, CircleStatsViewHandler>(Applications.ViewCircleStats)
-			.AddDomainEventHandler<CircleBetrayed, CircleStatsViewHandler>(Applications.ViewCircleStats)
+			.AddKafkaDomainEventApplication(Applications.CircleStatsView)
+			.AddDomainEventHandler<CircleClaimed, CircleStatsViewHandler>(Applications.CircleStatsView)
+			.AddDomainEventHandler<CircleJoined, CircleStatsViewHandler>(Applications.CircleStatsView)
+			.AddDomainEventHandler<CircleBetrayed, CircleStatsViewHandler>(Applications.CircleStatsView)
 		;
 		return services;
 	}
 
 	public static IServiceCollection AddCircleOfTrustViewUserStats(this IServiceCollection services) {
 		services
-			.AddKafkaDomainEventApplication(Applications.ViewUserStats)
-			.AddDomainEventHandler<CircleClaimed, UserStatsViewHandler>(Applications.ViewUserStats)
-			.AddDomainEventHandler<CircleJoined, UserStatsViewHandler>(Applications.ViewUserStats)
-			.AddDomainEventHandler<CircleBetrayed, UserStatsViewHandler>(Applications.ViewUserStats)
+			.AddKafkaDomainEventApplication(Applications.UserStatsView)
+			.AddDomainEventHandler<CircleClaimed, UserStatsViewHandler>(Applications.UserStatsView)
+			.AddDomainEventHandler<CircleJoined, UserStatsViewHandler>(Applications.UserStatsView)
+			.AddDomainEventHandler<CircleBetrayed, UserStatsViewHandler>(Applications.UserStatsView)
 		;
 		return services;
 	}
@@ -38,13 +40,27 @@ public static class ViewServiceCollectionExtensions {
 	public static IServiceCollection AddCircleOfTrustViewDb(this IServiceCollection services) {
 		services.AddScoped(serviceProvider => {
 			var configuration = serviceProvider.GetRequiredService<IConfiguration>();
-			var connectionString = configuration.GetConnectionString("ViewDbPostgreSql");
+			var connectionString = configuration.GetConnectionString(ViewDbConnection.ConnectionStringName);
 			NpgsqlConnection postgreSqlConnection = new(connectionString);
 			if (postgreSqlConnection.State != System.Data.ConnectionState.Open) {
 				postgreSqlConnection.Open();
 			}
 			ViewDbConnection viewDbConnection = new(postgreSqlConnection);
 			return viewDbConnection;
+		});
+		return services;
+	}
+
+	public static IServiceCollection AddCircleOfTrustViewDapperSynchronizationObserver(this IServiceCollection services) {
+		services.AddSingleton<ISynchronizationObserver>(serviceProvider => {
+			var configuration = serviceProvider.GetRequiredService<IConfiguration>();
+			var connectionString = configuration.GetConnectionString(ViewDbConnection.ConnectionStringName);
+			NpgsqlConnection postgreSqlConnection = new(connectionString);
+			if (postgreSqlConnection.State != System.Data.ConnectionState.Open) {
+				postgreSqlConnection.Open();
+			}
+			DapperSynchronizationObserver dapperSynchronizationObserver = new(postgreSqlConnection);
+			return dapperSynchronizationObserver;
 		});
 		return services;
 	}

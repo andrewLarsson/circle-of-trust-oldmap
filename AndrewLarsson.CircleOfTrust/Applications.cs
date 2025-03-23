@@ -1,7 +1,7 @@
 ﻿namespace AndrewLarsson.CircleOfTrust;
 public static class Applications {
-	public static readonly string Domain = "Domain";
-	public static readonly string ViewCircleStats = "ViewCircleStats";
-	public static readonly string ViewUserStats = "ViewUserStats";
-	public static readonly string LargestCircleSimulation = "LargestCircleSimulation";
+	public const string Domain = "Domain";
+	public const string CircleStatsView = "CircleStatsView";
+	public const string UserStatsView = "UserStatsView";
+	public const string LargestCircleSimulation = "LargestCircleSimulation";
 }

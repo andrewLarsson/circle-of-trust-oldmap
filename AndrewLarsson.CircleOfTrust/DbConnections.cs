@@ -29,4 +29,6 @@ public abstract class NamedDbConnection(IDbConnection connection) : IDbConnectio
 	}
 }
 
-public class ViewDbConnection(IDbConnection postgreSqlConnection) : NamedDbConnection(postgreSqlConnection);
+public class ViewDbConnection(IDbConnection postgreSqlConnection) : NamedDbConnection(postgreSqlConnection) {
+	public static readonly string ConnectionStringName = "ViewDbPostgreSql";
+}

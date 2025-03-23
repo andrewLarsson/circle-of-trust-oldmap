@@ -11,6 +11,7 @@ public class ViewController(
 	ViewDbConnection viewDbConnection
 ) : ControllerBase {
 
+	[Synchronizable(Applications.CircleStatsView)]
 	[HttpPost("leaderboard")]
 	public async Task<IEnumerable<CircleStats>> Leaderboard() {
 		IEnumerable<CircleStats> leaderboard = await viewDbConnection.QueryAsync<CircleStats>(
@@ -19,6 +20,7 @@ public class ViewController(
 		return leaderboard;
 	}
 
+	[Synchronizable(Applications.CircleStatsView)]
 	[HttpPost("circle-stats/{circleId}")]
 	public async Task<CircleStats?> CircleStats(string circleId) {
 		CircleStats? circleStats = await viewDbConnection.QueryFirstOrDefaultAsync<CircleStats>(
@@ -29,6 +31,7 @@ public class ViewController(
 	}
 
 	[Authorize]
+	[Synchronizable(Applications.CircleStatsView)]
 	[HttpPost("my-circle-stats")]
 	public async Task<CircleStats?> MyCircleStats() {
 		string userId = User.UserId();
@@ -40,6 +43,7 @@ public class ViewController(
 	}
 
 	[Authorize]
+	[Synchronizable(Applications.UserStatsView)]
 	[HttpPost("my-user-stats")]
 	public async Task<UserStats> MyUserStats() {
 		string userId = User.UserId();
@@ -50,6 +54,7 @@ public class ViewController(
 		return userStats;
 	}
 
+	[Synchronizable(Applications.UserStatsView)]
 	[HttpPost("user-stats/{userId}")]
 	public async Task<UserStats> UserStats(string userId) {
 		UserStats userStats = await viewDbConnection.QueryFirstOrDefaultAsync<UserStats>(
