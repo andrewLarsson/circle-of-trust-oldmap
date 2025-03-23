@@ -9,10 +9,10 @@ public class CircleOfTrustViewDefaultHandler(
 ) : IDefaultDomainEventHandler {
 	public Task Handle(PackedDomainEvent packedDomainEvent) {
 		return viewDb.ExecuteIdempotentTransactionWithSynchronization(
-			application: applicationContext._.Name,
 			transactionId: packedDomainEvent.DomainMessageId,
+			application: applicationContext,
 			synchronization: synchronizationContext,
-			async (transaction) => { }
+			perform: async (transaction) => { }
 		);
 	}
 }

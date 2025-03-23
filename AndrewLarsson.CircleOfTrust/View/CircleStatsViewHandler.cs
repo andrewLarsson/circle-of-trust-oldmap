@@ -27,8 +27,8 @@ public class CircleStatsViewHandler(
 
 	public Task Handle(DomainEvent<CircleClaimed> domainEvent) {
 		return viewDb.ExecuteIdempotentTransactionWithSynchronization(
-			application: applicationContext._.Name,
 			transactionId: domainEvent.DomainMessageId,
+			application: applicationContext,
 			synchronization: synchronizationContext,
 			sql: InsertCircleStatsFromCircleClaimedEvent,
 			param: domainEvent.ToParameters()
@@ -37,8 +37,8 @@ public class CircleStatsViewHandler(
 
 	public Task Handle(DomainEvent<CircleJoined> domainEvent) {
 		return viewDb.ExecuteIdempotentTransactionWithSynchronization(
-			application: applicationContext._.Name,
 			transactionId: domainEvent.DomainMessageId,
+			application: applicationContext,
 			synchronization: synchronizationContext,
 			sql: UpdateCircleStatsFromCircleJoinedEvent,
 			param: domainEvent.ToParameters()
@@ -47,8 +47,8 @@ public class CircleStatsViewHandler(
 
 	public Task Handle(DomainEvent<CircleBetrayed> domainEvent) {
 		return viewDb.ExecuteIdempotentTransactionWithSynchronization(
-			application: applicationContext._.Name,
 			transactionId: domainEvent.DomainMessageId,
+			application: applicationContext,
 			synchronization: synchronizationContext,
 			sql: UpdateCircleStatsFromCircleBetrayedEvent,
 			param: domainEvent.ToParameters()
