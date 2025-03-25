@@ -8,7 +8,7 @@ public class CircleOfTrustViewDefaultHandler(
 	ViewDbConnection viewDb
 ) : IDefaultDomainEventHandler {
 	public Task Handle(PackedDomainEvent packedDomainEvent) {
-		return viewDb.ExecuteIdempotentTransactionWithSynchronization(
+		return viewDb.ExecuteIdempotentTransaction(
 			transactionId: packedDomainEvent.DomainMessageId,
 			application: applicationContext,
 			synchronization: synchronizationContext,
