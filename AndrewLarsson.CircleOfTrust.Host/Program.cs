@@ -28,7 +28,8 @@ applicationBuilder.Services
 			ValidAudience = applicationBuilder.Configuration["Authentication:GoogleClientId"],
 			ValidateLifetime = true
 		};
-	});
+	})
+;
 applicationBuilder.Services.AddAuthorization();
 /* End Authentication */
 

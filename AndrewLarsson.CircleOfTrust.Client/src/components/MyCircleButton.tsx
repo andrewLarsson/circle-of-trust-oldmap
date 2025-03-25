@@ -6,40 +6,37 @@ import { CircleStats } from "../types";
 const MyCircleButton = (): JSX.Element => {
 	const navigate = useNavigate();
 	const { authenticationToken } = useAuth();
-	const [circleStats, setCircleStats] = useState<CircleStats | null>(null);
+	const [myCircle, setMyCircle] = useState<CircleStats | null>(null);
 	const [loading, setLoading] = useState(true);
 	const refreshKey = (useLocation().state as { refreshKey?: string })?.refreshKey;
 
 	useEffect(() => {
-		const fetchCircleStats = async () => {
+		if (!authenticationToken) {
+			return;
+		}
+		const fetchMyCircle = async () => {
 			try {
 				const response = await fetch("/api/view/my-circle-stats", {
-					method: "POST",
 					headers: {
-						"Content-Type": "application/json",
 						Authorization: `Bearer ${authenticationToken}`,
 					},
 				});
-
 				if (!response.ok) throw new Error();
-				const data = await response.json();
-				setCircleStats(data ?? null);
+				const myCircleData: CircleStats = await response.json();
+				setMyCircle(myCircleData);
 			} catch {
-				setCircleStats(null);
+				setMyCircle(null);
 			} finally {
 				setLoading(false);
 			}
 		};
-
-		if (authenticationToken) {
-			setLoading(true);
-			fetchCircleStats();
-		}
+		setLoading(true);
+		fetchMyCircle();
 	}, [authenticationToken, refreshKey]);
 
 	const handleClick = () => {
-		if (circleStats?.circleId) {
-			navigate(`/circle/${circleStats.circleId}`);
+		if (myCircle) {
+			navigate(`/circle/${myCircle.circleId}`);
 		} else {
 			navigate("/claim-circle");
 		}
@@ -58,14 +55,14 @@ const MyCircleButton = (): JSX.Element => {
 	);
 	return (
 		<a
-			href={circleStats?.circleId ? `/circle/${circleStats.circleId}` : "/claim-circle"}
+			href={myCircle ? `/circle/${myCircle.circleId}` : "/claim-circle"}
 			className="nav-item"
 			onClick={(e) => {
 				e.preventDefault();
 				handleClick();
 			}}
 		>
-			{circleStats?.circleId ? "My Circle" : "Claim Circle"}
+			{myCircle ? "My Circle" : "Claim Circle"}
 		</a>
 	);
 };

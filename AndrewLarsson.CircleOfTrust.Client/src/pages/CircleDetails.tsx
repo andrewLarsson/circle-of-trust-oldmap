@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useAuth } from "../auth/useAuth";
 import { PackedDomainEvent, CircleStats } from "../types";
@@ -13,46 +13,57 @@ const CircleDetails = (): JSX.Element => {
 	const navigate = useNavigate();
 	const { authenticationToken } = useAuth();
 
-	useEffect(() => {
-		fetch(`/api/view/circle-stats/${circleId}`, {
-			method: "POST",
-			headers: { "Content-Type": "application/json" },
-		})
-			.then((res) => res.json())
-			.then((data) => {
-				setCircle(data);
-				setLoading(false);
-			})
-			.catch((error) => {
-				console.error("Error fetching circle details:", error);
-				setLoading(false);
+	const fetchCircle = useCallback(async (syncToken?: string) => {
+		try {
+			const headers: HeadersInit = { };
+			if (syncToken) {
+				headers["Synchronization-Token"] = syncToken;
+			}
+			const response = await fetch(`/api/view/circle-stats/${circleId}`, {
+				headers
 			});
+			if (!response.ok) {
+				console.warn("Failed to fetch circle.");
+				return;
+			}
+			const circleData: CircleStats = await response.json();
+			setCircle(circleData);
+		} catch (error) {
+			console.error("Error fetching circle:", error);
+		} finally {
+			setLoading(false);
+		}
 	}, [circleId]);
 
-	const handleRequest = async (endpoint: string): Promise<void> => {
+	useEffect(() => {
+		fetchCircle();
+	}, [fetchCircle]);
+
+	const handleRequest = async (action: string): Promise<void> => {
 		if (!circle) return;
-
 		setActionResult(null);
-		const requestId = crypto.randomUUID().replace(/-/g, "");
-		const queryParams = new URLSearchParams({
-			requestId,
-			circleId: circle.circleId,
-			secretKey,
-		}).toString();
-
 		try {
-			const response = await fetch(`/api/circle-of-trust/${endpoint}?${queryParams}`, {
+			const requestId = crypto.randomUUID().replace(/-/g, "");
+			const queryParams = new URLSearchParams({
+				requestId,
+				circleId: circle.circleId,
+				secretKey
+			}).toString();
+			const response = await fetch(`/api/circle-of-trust/${action}?${queryParams}`, {
 				method: "POST",
-				headers: { Authorization: `Bearer ${authenticationToken}` },
+				headers: {
+					Authorization: `Bearer ${authenticationToken}`
+				}
 			});
-
-			if (response.ok) {
-				const packedEvent: PackedDomainEvent = await response.json();
-				setActionResult(packedEvent.eventName);
-			} else {
+			if (!response.ok) {
 				const errorText = await response.text();
 				setActionResult(`Failed: ${errorText}`);
+				return;
 			}
+			const eventData: PackedDomainEvent = await response.json();
+			setActionResult(eventData.eventName);
+			const syncToken = response.headers.get("Synchronization-Token") || undefined;
+			await fetchCircle(syncToken);
 		} catch (error) {
 			console.error("Error:", error);
 			setActionResult("Something went wrong.");
@@ -69,7 +80,6 @@ const CircleDetails = (): JSX.Element => {
 			<p><strong>Owner:</strong> {circle.owner}</p>
 			<p><strong>Betrayed:</strong> {circle.isBetrayed ? "Yes" : "No"}</p>
 			<p><strong>Members:</strong> {circle.members}</p>
-
 			<div className="action-form">
 				<input
 					className="input"
@@ -85,9 +95,7 @@ const CircleDetails = (): JSX.Element => {
 					Betray Circle
 				</button>
 			</div>
-
 			{actionResult && <p className="action-result">{actionResult}</p>}
-
 			<button onClick={() => navigate(-1)} className="back-button">
 				Back to Leaderboard
 			</button>

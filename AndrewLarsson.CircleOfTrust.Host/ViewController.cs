@@ -13,7 +13,7 @@ public class ViewController(
 ) : ControllerBase {
 
 	[Synchronizable(Applications.CircleStatsView)]
-	[HttpPost("leaderboard")]
+	[HttpGet("leaderboard")]
 	public async Task<IEnumerable<CircleStats>> Leaderboard() {
 		IEnumerable<CircleStats> leaderboard = await viewDbConnection.QueryAsync<CircleStats>(
 			"SELECT * FROM CircleLeaderboard;"
@@ -22,7 +22,7 @@ public class ViewController(
 	}
 
 	[Synchronizable(Applications.CircleStatsView)]
-	[HttpPost("circle-stats/{circleId}")]
+	[HttpGet("circle-stats/{circleId}")]
 	public async Task<CircleStats?> CircleStats(string circleId) {
 		CircleStats? circleStats = await viewDbConnection.QueryFirstOrDefaultAsync<CircleStats>(
 			"SELECT * FROM CircleStats WHERE CircleId = @circleId LIMIT 1;",
@@ -33,7 +33,7 @@ public class ViewController(
 
 	[Authorize]
 	[Synchronizable(Applications.CircleStatsView)]
-	[HttpPost("my-circle-stats")]
+	[HttpGet("my-circle-stats")]
 	public async Task<CircleStats?> MyCircleStats() {
 		string userId = User.UserId();
 		CircleStats? circleStats = await viewDbConnection.QueryFirstOrDefaultAsync<CircleStats>(
@@ -45,7 +45,7 @@ public class ViewController(
 
 	[Authorize]
 	[Synchronizable(Applications.UserStatsView)]
-	[HttpPost("my-user-stats")]
+	[HttpGet("my-user-stats")]
 	public async Task<UserStats> MyUserStats() {
 		string userId = User.UserId();
 		UserStats userStats = await viewDbConnection.QueryFirstOrDefaultAsync<UserStats>(
@@ -56,7 +56,7 @@ public class ViewController(
 	}
 
 	[Synchronizable(Applications.UserStatsView)]
-	[HttpPost("user-stats/{userId}")]
+	[HttpGet("user-stats/{userId}")]
 	public async Task<UserStats> UserStats(string userId) {
 		UserStats userStats = await viewDbConnection.QueryFirstOrDefaultAsync<UserStats>(
 			"SELECT * FROM UserStats WHERE UserId = @userId LIMIT 1;",

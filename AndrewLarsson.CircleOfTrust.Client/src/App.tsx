@@ -15,9 +15,14 @@ const App = (): JSX.Element => {
 
 	useEffect(() => {
 		if (!isAuthenticated && location.pathname !== "/login") {
-			navigate("/login", { replace: true });
+			navigate("/login", {
+				replace: true,
+				state: {
+					from: location.pathname + location.search + location.hash
+				}
+			});
 		}
-	}, [isAuthenticated, location.pathname, navigate]);
+	}, [isAuthenticated, navigate, location.pathname, location.search, location.hash]);
 
 	return (
 		<Layout>

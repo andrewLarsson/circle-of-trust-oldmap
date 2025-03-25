@@ -12,7 +12,6 @@ const Layout = ({ children }: { children: React.ReactNode }): JSX.Element => {
 					<MyCircleButton />
 				</div>
 			</nav>
-
 			<main className="content">{children}</main>
 		</div>
 	);

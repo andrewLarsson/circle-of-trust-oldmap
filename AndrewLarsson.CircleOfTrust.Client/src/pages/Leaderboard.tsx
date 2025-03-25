@@ -1,14 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { CircleStats } from "../types";
 import "./Leaderboard.css";
-
-interface CircleStats {
-	circleId: string;
-	title: string;
-	owner: string;
-	isBetrayed: boolean;
-	members: number;
-}
 
 const Leaderboard = (): JSX.Element => {
 	const [leaderboard, setLeaderboard] = useState<CircleStats[]>([]);
@@ -16,19 +9,18 @@ const Leaderboard = (): JSX.Element => {
 	const navigate = useNavigate();
 
 	useEffect(() => {
-		fetch("/api/view/leaderboard", {
-			method: "POST",
-			headers: { "Content-Type": "application/json" },
-		})
-			.then((res) => res.json())
-			.then((data) => {
-				setLeaderboard(data);
-				setLoading(false);
-			})
-			.catch((error) => {
+		const fetchLeaderboard = async () => {
+			try {
+				const response = await fetch("/api/view/leaderboard");
+				const leaderboardData: CircleStats[] = await response.json();
+				setLeaderboard(leaderboardData);
+			} catch (error) {
 				console.error("Error fetching leaderboard:", error);
+			} finally {
 				setLoading(false);
-			});
+			}
+		};
+		fetchLeaderboard();
 	}, []);
 
 	return (
