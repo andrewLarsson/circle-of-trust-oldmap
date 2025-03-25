@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Primitives;
 
-namespace AndrewLarsson.CircleOfTrust.Host;
+namespace AndrewLarsson.CircleOfTrust.Host.Infrastructure;
 
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
 public class SynchronizableAttribute(string Application) : Attribute, IAsyncActionFilter {

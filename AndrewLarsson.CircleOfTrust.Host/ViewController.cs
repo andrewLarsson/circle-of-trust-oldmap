@@ -1,3 +1,4 @@
+using AndrewLarsson.CircleOfTrust.Host.Infrastructure;
 using AndrewLarsson.CircleOfTrust.View;
 using Dapper;
 using Microsoft.AspNetCore.Authorization;

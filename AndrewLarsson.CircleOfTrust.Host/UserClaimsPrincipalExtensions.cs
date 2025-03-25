@@ -3,7 +3,6 @@ using System.Security.Cryptography;
 using System.Text;
 
 namespace AndrewLarsson.CircleOfTrust.Host;
-
 public static class UserClaimsPrincipalExtensions {
 	public static string UserId(this ClaimsPrincipal user) {
 		var email = user.Claims.First(x => x.Type == ClaimTypes.Email).Value;
