@@ -6,63 +6,60 @@ import { CircleStats } from "../types";
 const MyCircleButton = (): JSX.Element => {
 	const navigate = useNavigate();
 	const { authenticationToken } = useAuth();
-	const [myCircle, setMyCircle] = useState<CircleStats | null>(null);
-	const [loading, setLoading] = useState(true);
-	const refreshKey = (useLocation().state as { refreshKey?: string })?.refreshKey;
+	const location = useLocation();
+	const [myCircleId, setMyCircleId] = useState<string | null>(null);
+	const syncToken = (location.state as { syncToken?: string })?.syncToken;
 
 	useEffect(() => {
-		if (!authenticationToken) {
+		const myCircleIdData = (location.state as { myCircleId?: string })?.myCircleId;
+		if (myCircleIdData) {
+			setMyCircleId(myCircleIdData);
+		}
+	}, [location.state]);
+
+	useEffect(() => {
+		if (myCircleId || !authenticationToken) {
 			return;
 		}
 		const fetchMyCircle = async () => {
 			try {
+				const headers: HeadersInit = {
+					Authorization: `Bearer ${authenticationToken}`
+				};
+				if (syncToken) {
+					headers["Synchronization-Token"] = syncToken;
+				}
 				const response = await fetch("/api/view/my-circle-stats", {
-					headers: {
-						Authorization: `Bearer ${authenticationToken}`,
-					},
+					headers
 				});
 				if (!response.ok) throw new Error();
 				const myCircleData: CircleStats = await response.json();
-				setMyCircle(myCircleData);
+				setMyCircleId(myCircleData.circleId);
 			} catch {
-				setMyCircle(null);
-			} finally {
-				setLoading(false);
+				setMyCircleId(null);
 			}
 		};
-		setLoading(true);
 		fetchMyCircle();
-	}, [authenticationToken, refreshKey]);
+	}, [authenticationToken]); // eslint-disable-line react-hooks/exhaustive-deps
 
 	const handleClick = () => {
-		if (myCircle) {
-			navigate(`/circle/${myCircle.circleId}`);
+		if (myCircleId) {
+			navigate(`/circle/${myCircleId}`);
 		} else {
 			navigate("/claim-circle");
 		}
 	};
 
-	if (loading) return (
-		<a
-			href="/"
-			className="nav-item"
-			onClick={(e) => {
-				e.preventDefault();
-			}}
-		>
-			My Circle
-		</a>
-	);
 	return (
 		<a
-			href={myCircle ? `/circle/${myCircle.circleId}` : "/claim-circle"}
+			href={myCircleId ? `/circle/${myCircleId}` : "/claim-circle"}
 			className="nav-item"
 			onClick={(e) => {
 				e.preventDefault();
 				handleClick();
 			}}
 		>
-			{myCircle ? "My Circle" : "Claim Circle"}
+			{myCircleId ? "My Circle" : "Claim Circle"}
 		</a>
 	);
 };

@@ -51,7 +51,8 @@ const ClaimCircle = (): JSX.Element => {
 			const myCircleData: CircleStats = await myCircleResponse.json();
 			navigate(`/circle/${myCircleData.circleId}`, {
 				state: {
-					refreshKey: crypto.randomUUID()
+					myCircleId: myCircleData.circleId,
+					syncToken: syncToken
 				}
 			});
 		} catch (error) {

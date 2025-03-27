@@ -1,7 +1,8 @@
 import { useEffect, useState, useCallback } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../auth/useAuth";
 import { PackedDomainEvent, CircleStats } from "../types";
+import User from "../components/User";
 import "./CircleDetails.css";
 
 const CircleDetails = (): JSX.Element => {
@@ -10,12 +11,14 @@ const CircleDetails = (): JSX.Element => {
 	const [loading, setLoading] = useState(true);
 	const [secretKey, setSecretKey] = useState("");
 	const [actionResult, setActionResult] = useState<string | null>(null);
+	const syncTokenData = (useLocation().state as { syncToken?: string })?.syncToken;
+	const [syncToken, setSyncToken] = useState<string | null>(syncTokenData || null);
 	const navigate = useNavigate();
 	const { authenticationToken } = useAuth();
 
 	const fetchCircle = useCallback(async (syncToken?: string) => {
 		try {
-			const headers: HeadersInit = { };
+			const headers: HeadersInit = {};
 			if (syncToken) {
 				headers["Synchronization-Token"] = syncToken;
 			}
@@ -36,8 +39,8 @@ const CircleDetails = (): JSX.Element => {
 	}, [circleId]);
 
 	useEffect(() => {
-		fetchCircle();
-	}, [fetchCircle]);
+		fetchCircle(syncToken || undefined);
+	}, [fetchCircle]); // eslint-disable-line react-hooks/exhaustive-deps
 
 	const handleRequest = async (action: string): Promise<void> => {
 		if (!circle) return;
@@ -62,8 +65,9 @@ const CircleDetails = (): JSX.Element => {
 			}
 			const eventData: PackedDomainEvent = await response.json();
 			setActionResult(eventData.eventName);
-			const syncToken = response.headers.get("Synchronization-Token") || undefined;
-			await fetchCircle(syncToken);
+			const syncTokenActionData = response.headers.get("Synchronization-Token");
+			setSyncToken(syncTokenActionData);
+			await fetchCircle(syncTokenActionData || undefined);
 		} catch (error) {
 			console.error("Error:", error);
 			setActionResult("Something went wrong.");
@@ -72,12 +76,13 @@ const CircleDetails = (): JSX.Element => {
 
 	if (loading) return <p className="loading-text">Loading details...</p>;
 	if (!circle) return <p className="loading-text">Circle not found.</p>;
+
 	return (
 		<div className="circle-details">
 			<h2 className="title">Circle Details</h2>
 			<p><strong>ID:</strong> {circle.circleId}</p>
 			<p><strong>Title:</strong> {circle.title}</p>
-			<p><strong>Owner:</strong> {circle.owner}</p>
+			<p><strong>Owner:</strong> <User userId={circle.owner} syncToken={syncToken || undefined } /></p>
 			<p><strong>Betrayed:</strong> {circle.isBetrayed ? "Yes" : "No"}</p>
 			<p><strong>Members:</strong> {circle.members}</p>
 			<div className="action-form">

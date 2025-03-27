@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { CircleStats } from "../types";
+import User from "../components/User";
 import "./Leaderboard.css";
 
 const Leaderboard = (): JSX.Element => {
@@ -40,13 +41,13 @@ const Leaderboard = (): JSX.Element => {
 						</tr>
 					</thead>
 					<tbody>
-						{leaderboard.map((stat) => (
-							<tr key={stat.circleId} className="clickable-row" onClick={() => navigate(`/circle/${stat.circleId}`)}>
-								<td>{stat.circleId}</td>
-								<td>{stat.title}</td>
-								<td>{stat.owner}</td>
-								<td>{stat.isBetrayed ? "Yes" : "No"}</td>
-								<td>{stat.members}</td>
+						{leaderboard.map((circle) => (
+							<tr key={circle.circleId} className="clickable-row" onClick={() => navigate(`/circle/${circle.circleId}`)}>
+								<td>{circle.circleId}</td>
+								<td>{circle.title}</td>
+								<td><User userId={circle.owner}/></td>
+								<td>{circle.isBetrayed ? "Yes" : "No"}</td>
+								<td>{circle.members}</td>
 							</tr>
 						))}
 					</tbody>

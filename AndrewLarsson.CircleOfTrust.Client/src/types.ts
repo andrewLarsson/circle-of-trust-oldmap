@@ -18,3 +18,11 @@ export interface CircleStats {
 	isBetrayed: boolean;
 	members: number;
 }
+
+export interface UserStats {
+	userId: string;
+	circleId: string | null;
+	memberOfCircles: number;
+	memberOfNonbetrayedCircles: number;
+	memberOfBetrayedCircles: number;
+}
