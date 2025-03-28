@@ -37,7 +37,6 @@ const User = ({ userId, syncToken }: UserProps): JSX.Element => {
 
 	if (loading) return <span>Loading...</span>;
 	if (!user) return <span>User not available</span>;
-	console.log(user);
 	return (
 		<span>
 			{user.userId} [{user.memberOfCircles}, {user.memberOfNonbetrayedCircles}, {user.memberOfBetrayedCircles}]

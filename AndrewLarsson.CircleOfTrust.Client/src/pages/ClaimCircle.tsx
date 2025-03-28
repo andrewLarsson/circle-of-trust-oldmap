@@ -62,7 +62,7 @@ const ClaimCircle = (): JSX.Element => {
 	};
 
 	return (
-		<div className="claim-circle">
+		<div className="container">
 			<h2 className="title">Claim Your Circle</h2>
 			<div className="action-form">
 				<input
@@ -79,14 +79,11 @@ const ClaimCircle = (): JSX.Element => {
 					value={secretKey}
 					onChange={(e) => setSecretKey(e.target.value)}
 				/>
-				<button className="button button-yellow" onClick={handleClaim}>
+				<button className="button button-green" onClick={handleClaim}>
 					Claim Circle
 				</button>
 			</div>
 			{result && <p className="action-result">{result}</p>}
-			<button className="back-button" onClick={() => navigate(-1)}>
-				Back
-			</button>
 		</div>
 	);
 };

@@ -1,5 +1,3 @@
-/* Layout.css */
-
 .layout-container {
 	display: flex;
 	flex-direction: column;
@@ -10,35 +8,30 @@
 	margin: 20px;
 }
 
-/* Navigation Bar */
 .navbar {
-	background-color: #0073e6;
-	color: white;
+	background-color: #2D5864;
 	padding: 16px;
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
+	border-radius: 0px 0px 12px 12px;
 }
 
-/* Spacing between links */
 .nav-links {
 	display: flex;
-	gap: 20px; /* Ensures space between items */
+	gap: 20px;
 }
 
-/* Individual nav items */
 .nav-item {
 	text-decoration: none;
-	color: white;
 	padding: 8px 16px;
 	border-radius: 4px;
 	transition: background-color 0.3s;
 }
 .nav-item:hover {
-	background-color: #005bb5;
+	background-color: #709792;
 }
 
-/* Page Content */
 .content {
 	flex: 1;
 }

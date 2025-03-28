@@ -25,28 +25,28 @@ const Leaderboard = (): JSX.Element => {
 	}, []);
 
 	return (
-		<div className="leaderboard-container">
-			<h2 className="leaderboard-title">Leaderboard</h2>
+		<div className="container">
+			<h2 className="title">Leaderboard</h2>
 			{loading ? (
 				<p className="loading-text">Loading leaderboard...</p>
 			) : (
 				<table className="leaderboard-table">
 					<thead>
 						<tr>
-							<th>Circle ID</th>
 							<th>Title</th>
 							<th>Owner</th>
-							<th>Betrayed</th>
 							<th>Members</th>
 						</tr>
 					</thead>
 					<tbody>
 						{leaderboard.map((circle) => (
-							<tr key={circle.circleId} className="clickable-row" onClick={() => navigate(`/circle/${circle.circleId}`)}>
-								<td>{circle.circleId}</td>
+							<tr
+								key={circle.circleId}
+								className={`clickable-row ${circle.isBetrayed ? "betrayed" : ""}`}
+								onClick={() => navigate(`/circle/${circle.circleId}`)}
+							>
 								<td>{circle.title}</td>
-								<td><User userId={circle.owner}/></td>
-								<td>{circle.isBetrayed ? "Yes" : "No"}</td>
+								<td><User userId={circle.owner} /></td>
 								<td>{circle.members}</td>
 							</tr>
 						))}

@@ -46,8 +46,8 @@ const Login = (): JSX.Element => {
 
 	if (isAuthenticated) return <></>;
 	return (
-		<div className="login-container">
-			<h2 className="login-title">Login</h2>
+		<div className="container">
+			<h2 className="title">Login</h2>
 			<div id="google-signin-btn"></div>
 		</div>
 	);
