@@ -78,11 +78,13 @@ const CircleDetails = (): JSX.Element => {
 	return (
 		<div className="container">
 			<h2 className="title">Circle Details</h2>
-			<p><strong>ID:</strong> {circle.circleId}</p>
-			<p><strong>Title:</strong> {circle.title}</p>
-			<p><strong>Owner:</strong> <User userId={circle.owner} syncToken={syncToken || undefined } /></p>
-			<p><strong>Betrayed:</strong> {circle.isBetrayed ? "Yes" : "No"}</p>
-			<p><strong>Members:</strong> {circle.members}</p>
+			<ul className="details">
+				<li><strong>ID:</strong> {circle.circleId}</li>
+				<li><strong>Title:</strong> {circle.title}</li>
+				<li><strong>Owner:</strong> <User userId={circle.owner} syncToken={syncToken || undefined } /></li>
+				<li><strong>Betrayed:</strong> {circle.isBetrayed ? "Yes" : "No"}</li>
+				<li><strong>Members:</strong> {circle.members}</li>
+			</ul>
 			<div className="action-form">
 				<input
 					className="input"

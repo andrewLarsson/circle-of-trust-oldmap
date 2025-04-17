@@ -8,6 +8,10 @@
 	-moz-osx-font-smoothing: grayscale;
 }
 
+#root {
+	width: 100%;
+}
+
 a {
 	font-weight: 500;
 	color: #E6DAB3;
@@ -31,16 +35,29 @@ body {
 h1 {
 	font-size: 3.2em;
 	line-height: 1.1;
+	padding: 0px;
+	margin: 0px;
 }
 
 .container {
-	max-width: 600px;
-	margin: 2rem auto;
-	padding: 2rem;
+	margin: 32px auto;
+	padding: 32px;
 	background-color: #709792;
 	border-radius: 12px;
 	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 	font-family: sans-serif;
+}
+
+.details {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	gap: 16px 64px;
+	list-style: none;
+	background-color: #293E3E;
+	border-radius: 8px;
+	padding: 16px 32px;
+	font-size: 1rem;
 }
 
 .title {
@@ -62,7 +79,7 @@ h1 {
 }
 
 .button {
-	padding: 0.5rem;
+	padding: 8px;
 	border: none;
 	border-radius: 8px;
 	cursor: pointer;
@@ -89,7 +106,7 @@ h1 {
 	margin-top: 2rem;
 	display: flex;
 	flex-direction: column;
-	gap: 0.5rem;
+	gap: 10px;
 }
 
 .action-result {
@@ -104,5 +121,5 @@ h1 {
 .loading-text {
 	text-align: center;
 	font-size: 1.2rem;
-	padding: 2rem;
+	padding: 32px;
 }

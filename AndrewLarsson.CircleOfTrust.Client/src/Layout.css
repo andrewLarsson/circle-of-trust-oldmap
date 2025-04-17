@@ -1,30 +1,46 @@
 .layout-container {
-	display: flex;
-	flex-direction: column;
 	min-height: 100vh;
+	width: 100%; /* Allow the layout to take up the full width */
+	max-width: 1200px; /* Set a max width to prevent it from becoming too wide */
+	margin: 0 auto; /* Center the layout horizontally */
+	position: relative;
+}
+
+.header {
+	display: flex;
+	flex-direction: row;
+	gap: 26px;
+	position: relative;
+	margin-top: 24px;
 }
 
 .logo {
-	margin: 20px;
+	width: 160px; /* Adjust logo size */
+	height: 160px;
+	position: absolute;
+	border-radius: 50%;
+	top: -20px;
+	left: calc(50% - 80px);
 }
 
 .navbar {
 	background-color: #2D5864;
-	padding: 16px;
+	padding: 32px;
 	display: flex;
 	justify-content: space-between;
-	align-items: center;
-	border-radius: 0px 0px 12px 12px;
+	align-items: flex-end;
+	border-radius: 12px 12px;
+	flex: 1;
 }
 
 .nav-links {
 	display: flex;
-	gap: 20px;
+	gap: 2rem; /* Increase space between navbar items */
 }
 
 .nav-item {
 	text-decoration: none;
-	padding: 8px 16px;
+	padding: 10px 20px; /* Adjust padding for wider buttons */
 	border-radius: 4px;
 	transition: background-color 0.3s;
 }
@@ -33,5 +49,5 @@
 }
 
 .content {
-	flex: 1;
+	flex: 0 0 100%;
 }
