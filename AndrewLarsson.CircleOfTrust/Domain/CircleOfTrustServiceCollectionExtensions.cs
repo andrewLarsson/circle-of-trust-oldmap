@@ -10,7 +10,8 @@ public static class CircleOfTrustServiceCollectionExtensions {
 			.AddApplicationServiceWithPureStyle<CircleService, Circle>()
 			.AddPostgreSqlMartenAggregateRootStorage()
 			.TryAddPostgreSqlMartenAggregateRootStore<Circle>()
-			.AddTransient<JsonConverter, CircleJsonConverter>()
+			//.TryAddInMemoryAggregateRootStore<Circle>()
+			//.AddTransient<JsonConverter, CircleJsonConverter>()
 		;
 		return services;
 	}

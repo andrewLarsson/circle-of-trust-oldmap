@@ -1,0 +1,37 @@
+1,000,000 Messages with real live DigitalOcean $5,800/mo PostgreSQL server, using standalone .exe that only does the Domain Message processing.
+firstMessageId = d9a43cf9d28c4f089c0cece3e1c89db7, 398559
+lastMessageId = 5f4231b63e4447a2a5dadb60345c4a69, 1398558
+
+READ ONLY (aka, no writes required, as all transactions have already been completed)
+1 = 
+2 = 
+4 = 
+8 = 
+16 = 
+32 = 
+64 = 
+128 = Last messaged received. Total seconds to process all 955589 messages: 437.1389278
+256 = Last messaged received. Total seconds to process all 931706 messages: 231.1576476
+512 = Last messaged received. Total seconds to process all 930048 messages: 155.4353653
+997 = Last messaged received. Total seconds to process all 935021 messages: 171.4050168
+
+READ AND WRITE
+1 = 
+2 = 
+4 = 
+8 = 
+16 = 
+32 = 
+64 = 
+128 = 
+256 = Last messaged received. Total seconds to process all 950480 messages: 785.5552697
+512 = Last messaged received. Total seconds to process all 945019 messages: 547.2284484
+997 = Last messaged received. Total seconds to process all 950768 messages: 586.0215326
+
+Notice how these numbers are essentially equal to the in-memory tests at the high end. I think this means that within a single partition, this is our upper limit - due to how much processing needs to be done on the CPU.
+
+Next, I should test to see if I can hit these numbers in release mode with my local PostgreSQL database.
+
+After that, I can go back to testing in-memory and optimizing there (if I feel like I really need to hit higher than 100K tpm). But honestly, I'm very satisfied with 100K tpm. And that was my goal, was to be satisfied.
+
+So I think for now, I will polish up a few things, but not focus on any optitmization. That way I can move on to my book.

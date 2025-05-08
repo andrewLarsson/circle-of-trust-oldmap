@@ -17,14 +17,14 @@ public class LargestCircleSimulation(
 	protected override async Task ExecuteAsync(CancellationToken stoppingToken) {
 		await Task.Yield();
 
-		const int totalUsers = 100;
-		const int actionsPerUser = 5;
+		const int totalUsers = 1000;
+		const int actionsPerUser = 9;
 		var random = new Random();
 		var secretKey = "April Fools!";
 
 		// Generate 100 unique users
 		var users = Enumerable.Range(1, totalUsers)
-			.Select(_ => Guid.NewGuid().ToString("N")[..5])
+			.Select(_ => Guid.NewGuid().ToString("N")[..8])
 			.ToList()
 		;
 
@@ -79,12 +79,15 @@ public class LargestCircleSimulation(
 			(string largestCircleId, uint largestCircleMemberCount) = LargestCircleSimulationEventHandler.circleMemberCounts.MaxBy(kvp => kvp.Value);
 			logger.LogInformation("Largest Circle: {largestCircleId} - {largestCircleMemberCount}", largestCircleId, largestCircleMemberCount);
 		});
+		var firstDomainMessageId = domainMessages.First().Id;
 		var lastDomainMessageId = domainMessages.Last().Id;
 		LargestCircleSimulationEventHandler.lastDomainMessageId = lastDomainMessageId;
 		LargestCircleSimulationEventHandler.stopwatch.Start();
+		//DomainMessageProcessor.firstDomainMessageId = firstDomainMessageId;
+		//DomainMessageProcessor.lastDomainMessageId = lastDomainMessageId;
 
 		// Send all messages
-		logger.LogInformation("Sending {X} Domain Messages", domainMessages.Count);
+		logger.LogCritical("Sending {X} Domain Messages", domainMessages.Count);
 		Stopwatch stopwatch = new();
 		stopwatch.Start();
 		foreach (var domainMessage in domainMessages) {
@@ -92,7 +95,7 @@ public class LargestCircleSimulation(
 		}
 		stopwatch.Stop();
 		var elapsedSeconds = stopwatch.Elapsed.TotalSeconds;
-		logger.LogInformation("Last message sent. Seconds to send all messages: {elapsedSeconds}", elapsedSeconds);
+		logger.LogCritical("Last message {lastDomainMessageId} sent. Seconds to send all messages: {elapsedSeconds}", lastDomainMessageId, elapsedSeconds);
 	}
 }
 

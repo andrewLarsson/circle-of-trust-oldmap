@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-
+/*
 namespace AndrewLarsson.CircleOfTrust.Domain;
 public class CircleJsonConverter : JsonConverter<Circle> {
 	public override Circle Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) {
@@ -66,3 +66,4 @@ public class CircleJsonConverter : JsonConverter<Circle> {
 		writer.WriteEndObject();
 	}
 }
+*/

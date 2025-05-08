@@ -1,0 +1,31 @@
+1,000,000 Messages with In-Memory Aggregate Root Store
+firstMessageId = d9a43cf9d28c4f089c0cece3e1c89db7, 398559
+lastMessageId = 5f4231b63e4447a2a5dadb60345c4a69, 1398558
+
+(publishing run) Last message sent. Seconds to send all messages: 15594.5712649
+
+1 = Last messaged received. Total seconds to process all 1000000 messages: 15464.1708907
+2 = Last messaged received. Total seconds to process all 971026 messages: 7733.1339563
+4 = Last messaged received. Total seconds to process all 891407 messages: 3839.8093792
+8 = Last messaged received. Total seconds to process all 928251 messages: 1920.7218965
+16 = Last messaged received. Total seconds to process all 970782 messages: 828.5866644
+32 = Last messaged received. Total seconds to process all 991173 messages: 456.1525976
+64 = Last messaged received. Total seconds to process all 998013 messages: 494.810968
+128 = Last messaged received. Total seconds to process all 990422 messages: 566.7031395
+1280 = Last messaged received. Total seconds to process all 994764 messages: 506.6512336
+
+Something I need to test is adding artificial, real async latency of ~40ms to see what happens.
+Because what seems to be happening is I keep hitting walls at 32 virtual partitions no matter if it's in memory, local PostgreSQL, or $5,000/mo DigitalOcean PostgreSQL.
+
+Should I also do some real performance profiling?
+
+UPDATED CODE, SLIGHTLY OPTIMIZED
+32 = Last messaged received. Total seconds to process all 977392 messages: 500.1775048
+64 = Last messaged received. Total seconds to process all 965304 messages: 245.8310432
+128 = Last messaged received. Total seconds to process all 930932 messages: 103.6900953
+256 = Last messaged received. Total seconds to process all 869971 messages: 64.6616749
+512 = Last messaged received. Total seconds to process all 868153 messages: 44.5672817
+997 = Last messaged received. Total seconds to process all 900789 messages: 39.190073
+1024 = Last messaged received. Total seconds to process all 872981 messages: 38.0399916
+
+...I'm thinking it might be time to deploy this directly to DigitalOcean in the same region and test again against their $5,800/mo PostgreSQL database. Now that I've broken through the throughput barrier!

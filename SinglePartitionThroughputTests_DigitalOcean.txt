@@ -1,0 +1,20 @@
+DigitalOcean 40vCPU PostgreSQL
+1vp = 1750sec
+16vp = 105sec
+32vp = 90sec
+64vp = 80sec
+128vp = 75sec
+256vp = 70sec
+512vp = DNF
+997vp = DNF
+
+DigitalOcean 48vCPU NVMe PostgreSQL 40ms latency
+(plus new code changes)
+1vp = 
+16vp = 105sec
+32vp = 80sec
+64vp = 70sec
+128vp = 80sec OR 45sec??? did this only happen because I forgot to delete all records? I don't think so... because it's only taking 15 seconds if I don't delete all records... except sometimes it does take 40 seconds if I don't delete all records.
+256vp = 100sec??? need to redo with control a2ad7aa465d74b74ad21fd768d3e4fce
+512vp = 
+997vp = 

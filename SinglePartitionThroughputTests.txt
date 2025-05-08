@@ -1,0 +1,15 @@
+Old implementation    : 10,000 in 315 sec
+New implementation x1 : 10,000 in 315 sec
+New implementation x2 : 10,000 in 170 sec
+New implementation x3 : 10,000 in 125 sec
+New implementation x4 : 10,000 in 115 sec
+New implementation x5 : 10,000 in 115 sec
+New implementation x10: 10,000 in 115 sec
+Nv2 implementation x10: 10,000 in 095 sec
+Nv3 implementation x10: 10,000 in 070 sec
+Nv3 implementation x5 : 10,000 in 080 sec
+
+Old = single partition
+New = basic virtual partitioning
+Nv2 = VP with minor optimizations
+Nv3 = PostgreSQL server-side settings

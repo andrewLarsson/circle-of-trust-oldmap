@@ -2,15 +2,17 @@
 public class Circle {
 	public string Title { get; }
 	public string Owner { get; }
-	public Lock Lock { get; }
-	public Members Members { get; }
+	Lock Lock { get; }
+	public string SecretKey => Lock.secretKey;
+	Members members { get; }
+	public IEnumerable<string> Members => members.members.ToList();
 	public bool Betrayed { get; private set; }
 
-	Circle(string title, string owner, string secretKey, IEnumerable<string> members, bool betrayed) {
+	public Circle(string title, string owner, string secretKey, IEnumerable<string> members, bool betrayed) {
 		Title = title;
 		Owner = owner;
 		Lock = new Lock(secretKey);
-		Members = new Members(members);
+		this.members = new Members(members);
 		Betrayed = betrayed;
 	}
 
@@ -35,10 +37,10 @@ public class Circle {
 		if (!Lock.Unlock(message.Key)) {
 			return new KeyDoesNotUnlockCircle();
 		}
-		if (Members.IsMember(message.User)) {
+		if (members.IsMember(message.User)) {
 			return new UserAlreadyMemberOfCircle(message.User);
 		}
-		Members.Join(message.User);
+		members.Join(message.User);
 		return new CircleJoined(Member: message.User);
 	}
 
@@ -49,7 +51,7 @@ public class Circle {
 		if (!Lock.Unlock(message.Key)) {
 			return new KeyDoesNotUnlockCircle();
 		}
-		if (Members.IsMember(message.User)) {
+		if (members.IsMember(message.User)) {
 			return new UserAlreadyMemberOfCircle(message.User);
 		}
 		Betrayed = true;
@@ -58,7 +60,7 @@ public class Circle {
 }
 
 public class Lock(string secretKey) {
-	readonly string secretKey = secretKey;
+	public readonly string secretKey = secretKey;
 
 	public bool Unlock(string key) {
 		return key == secretKey;
@@ -66,7 +68,7 @@ public class Lock(string secretKey) {
 }
 
 public class Members(IEnumerable<string> members) {
-	readonly HashSet<string> members = [.. members];
+	public readonly HashSet<string> members = [.. members];
 
 	public bool IsMember(string user) {
 		return members.Contains(user);
