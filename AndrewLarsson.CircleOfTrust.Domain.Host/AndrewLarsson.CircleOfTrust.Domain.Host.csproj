@@ -17,4 +17,14 @@
 		</None>
 	</ItemGroup>
 
+	<ItemGroup>
+		<None Update="cert.crt">
+                        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+                </None>
+	</ItemGroup>
+
+	<PropertyGroup>
+		 <ServerGarbageCollection>true</ServerGarbageCollection>
+	</PropertyGroup>
+
 </Project>
