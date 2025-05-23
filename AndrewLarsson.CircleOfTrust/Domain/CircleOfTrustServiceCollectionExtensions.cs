@@ -8,9 +8,11 @@ public static class CircleOfTrustServiceCollectionExtensions {
 		services
 			.AddKafkaDomainMessageApplication(Applications.Domain)
 			.AddApplicationServiceWithPureStyle<CircleService, Circle>()
-			.AddPostgreSqlMartenAggregateRootStorage()
-			.TryAddPostgreSqlMartenAggregateRootStore<Circle>()
+			//.AddPostgreSqlMartenAggregateRootStorage()
+			//.TryAddPostgreSqlMartenAggregateRootStore<Circle>()
 			//.TryAddInMemoryAggregateRootStore<Circle>()
+			.AddNpgsqlAggregateRootStorage()
+			.TryAddNpgsqlAggregateRootStore<Circle>()
 			//.AddTransient<JsonConverter, CircleJsonConverter>()
 		;
 		return services;
