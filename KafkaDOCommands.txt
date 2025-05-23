@@ -1,0 +1,64 @@
+kafka-console-consumer.bat `
+  --bootstrap-server localhost:9092 `
+  --topic AndrewLarsson.CircleOfTrust.Circle.DomainMessages `
+  --from-beginning `
+  --property print.key=true `
+  --property key.separator=, `
+  --timeout-ms 300000 > exported-messages.txt
+
+./kafka-console-consumer.sh \
+  --bootstrap-server localhost:9092 \
+  --topic AndrewLarsson.CircleOfTrust.Circle.DomainMessages \
+  --from-beginning \
+  --property print.key=true \
+  --property key.separator=, \
+| \
+./kafka-console-producer.sh \
+  --bootstrap-server db-kafka-sfo3-59651-do-user-1630345-0.m.db.ondigitalocean.com:25073 \
+  --topic AndrewLarsson.CircleOfTrust.Circle.DomainMessages \
+  --property parse.key=true \
+  --property key.separator=,
+
+
+
+
+./kafka-console-consumer.sh \
+  --bootstrap-server localhost:9092 \
+  --topic AndrewLarsson.CircleOfTrust.Circle.DomainMessages \
+  --from-beginning \
+  --property print.key=true \
+  --property key.separator=, \
+  --timeout-ms 300000 \
+  > ./localhost-kafka-export.txt
+
+
+pv -l ./localhost-kafka-export.txt | \
+./kafka-console-producer.sh \
+  --bootstrap-server db-kafka-sfo3-59651-do-user-1630345-0.m.db.ondigitalocean.com:25073 \
+  --topic AndrewLarsson.CircleOfTrust.Circle.DomainMessages \
+  --producer.config ./producer.config \
+  --property parse.key=true \
+  --property key.separator=,
+
+
+
+
+
+./kafka-topics.sh \
+  --bootstrap-server db-kafka-sfo3-59651-do-user-1630345-0.m.db.ondigitalocean.com:25073 \
+  --command-config ./producer.config \
+  --create \
+  --topic AndrewLarsson.CircleOfTrust.Circle.DomainMessages \
+  --partitions 1 \
+  --replication-factor 1
+
+
+
+
+./kafka-console-consumer.sh \
+  --bootstrap-server db-kafka-sfo3-59651-do-user-1630345-0.m.db.ondigitalocean.com:25073 \
+  --topic AndrewLarsson.CircleOfTrust.Circle.DomainMessages \
+  --partition 0 \
+  --offset 0 \
+  --max-messages 1 \
+  --consumer.config ./producer.config

@@ -1,0 +1,7 @@
+Try using Npgsql directly. Or Dapper. See if it's Marten that's slowing us down. - Done, some performance benefit, left as an option for AR Store.
+
+I could... batch transactions... keep them in memory and wait to commit...
+Just need to be very careful with batching to make sure it's still deterministic and exactly-once, not getting out of sync, etc etc.
+But the reality is that it would be quite the architectural change. Not worth doing right now. 2.5M is a very capable number.
+
+Also... 80 threads seemed to be the sweet spot that the ThreadPool keeps landing on. I wonder if that means that 80 connections is also a sweet spot.

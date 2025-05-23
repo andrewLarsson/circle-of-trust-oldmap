@@ -1,0 +1,8 @@
+(on the same machine)
+with 1 running x256 = 80
+with 2 running x256 = 160
+hmmmm need to try with 2 machines just to be safe
+
+Okay, 2 SEPARATE, BETTER machines
+with 1 running x256 = 85
+with 2 running x256 = 95

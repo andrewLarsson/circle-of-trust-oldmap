@@ -35,3 +35,150 @@ Next, I should test to see if I can hit these numbers in release mode with my lo
 After that, I can go back to testing in-memory and optimizing there (if I feel like I really need to hit higher than 100K tpm). But honestly, I'm very satisfied with 100K tpm. And that was my goal, was to be satisfied.
 
 So I think for now, I will polish up a few things, but not focus on any optitmization. That way I can move on to my book.
+
+UPDATED CODE, SLIGHTLY OPTIMIZED, RUNNING ON LIVE DROPLET
+64 = Last messaged received. Total seconds to process all 926912 messages: 340.7427607
+128 = Last messaged received. Total seconds to process all 830101 messages: 211.6104766
+256 = Last messaged received. Total seconds to process all 886809 messages: 238.1974752
+512 = Last messaged received. Total seconds to process all 974878 messages: 314.8858876
+997 = Last messaged received. Total seconds to process all 895830 messages: 410.1271914
+
+UPDATED CODE, SLIGHTLY OPTIMIZED, RUNNING ON BETTER LIVE DROPLET
+NumVirtualPartitions,ConnectionPoolSize
+128,256 = Last messaged received. Total seconds to process all 984286 messages: 210.802365
+256,256 = Last messaged received. Total seconds to process all 859220 messages: 171.4227345
+512,512 = Last messaged received. Total seconds to process all 871175 messages: 216.8089721
+512,256 = Last messaged received. Total seconds to process all 879386 messages: 192.5112994 HMMMMMMM
+---
+2048,256 = Last messaged received. Total seconds to process all 828807 messages: 103.0283734
+2048,128 = Last messaged received. Total seconds to process all 725181 messages: 86.5622863
+2048,64 = Last messaged received. Total seconds to process all 907919 messages: 96.8162907
+1024,64 = Last messaged received. Total seconds to process all 944366 messages: 83.1561634
+512,64 = Last messaged received. Total seconds to process all 926336 messages: 71.28875
+256,64 = Last messaged received. Total seconds to process all 989636 messages: 92.7459622
+128,64 = Last messaged received. Total seconds to process all 996574 messages: 134.3615943
+512,32 = Last messaged received. Total seconds to process all 934318 messages: 75.4479403
+Ugh. Here's a problem. I just realized that for all the ones after the ---, I wasn't deleting the records between sessions, so the crazy fast numbers aren't accurate. But there is still a trend!
+Okay, the below numbers are ones where I made sure to delete between sessions.
+512,64 = Last messaged received. Total seconds to process all 985861 messages: 224.8407019
+512,128 = Last messaged received. Total seconds to process all 994631 messages: 223.2858115
+512,256 = Last messaged received. Total seconds to process all 836983 messages: 204.2226004
+256,256 = Last messaged received. Total seconds to process all 858065 messages: 176.4676753
+256,128 = Last messaged received. Total seconds to process all 925839 messages: 180.1563791
+256,64 = Last messaged received. Total seconds to process all 922354 messages: 190.5729657
+256,32 = Last messaged received. Total seconds to process all 855825 messages: 189.9388572
+(below I changed 100ms to 1000ms delay when null message received)
+2048,32 = Last messaged received. Total seconds to process all 677191 messages: 213.7129104
+2048,64 = Last messaged received. Total seconds to process all 979586 messages: 289.131689
+2048,128 = Last messaged received. Total seconds to process all 984272 messages: 306.5106828
+
+NPGSQL DIRECT IMPLEMENTATION w/STATS (UPDATED CODE, SLIGHTLY OPTIMIZED, RUNNING ON BETTER LIVE DROPLET)
+NumVirtualPartitions,ConnectionPoolSize
+128,128 = Last messaged received. Total seconds to process all 971482 messages: 164.8977581
+          Min: 0ms, Max: 270ms, Median: 1.0ms, Avg: 2.4ms
+256,256 = Last messaged received. Total seconds to process all 981647 messages: 135.8475502
+          Min: 0ms, Max: 434ms, Median: 2.0ms, Avg: 5.7ms
+512,512 = Last messaged received. Total seconds to process all 951738 messages: 134.3643468
+          Min: 0ms, Max: 501ms, Median: 5.0ms, Avg: 11.0ms
+990,990 = Last messaged received. Total seconds to process all 985555 messages: 161.8756026
+          Min: 0ms, Max: 1405ms, Median: 32.0ms, Avg: 32.2ms
+
+NPGSQL DIRECT IMPLEMENTATION OPEN+CLOSE PER METHOD w/STATS (UPDATED CODE, SLIGHTLY OPTIMIZED, RUNNING ON BETTER LIVE DROPLET)
+NumVirtualPartitions,ConnectionPoolSize
+128,128 = Last messaged received. Total seconds to process all 992050 messages: 177.5871706
+          Min: 0ms, Max: 89ms, Median: 1.0ms, Avg: 1.7ms
+256,128 = Last messaged received. Total seconds to process all 954756 messages: 113.9320611
+          Min: 0ms, Max: 128ms, Median: 3.0ms, Avg: 4.3ms
+512,128 = Last messaged received. Total seconds to process all 946301 messages: 120.4768426
+          Min: 0ms, Max: 439ms, Median: 7.0ms, Avg: 12.2ms
+128,64  = Last messaged received. Total seconds to process all 808513 messages: 125.3726892
+          Min: 0ms, Max: 104ms, Median: 2.0ms, Avg: 2.5ms
+256,64  = Last messaged received. Total seconds to process all 845203 messages: 95.3192407
+          Min: 0ms, Max: 120ms, Median: 3.0ms, Avg: 4.9ms
+
+NPGSQL DIRECT IMPLEMENTATION OPEN+CLOSE PER METHOD w/STATS (UPDATED CODE, SLIGHTLY OPTIMIZED, RUNNING ON THE BEST LIVE DROPLET DIGITAL OCEAN HAS)
+512,512  = Last messaged received. Total seconds to process all 850565 messages: 67.272129
+           Min: 0ms, Max: 219ms, Median: 4.0ms, Avg: 6.9ms
+512,256  = Last messaged received. Total seconds to process all 938689 messages: 69.9761899
+           Min: 0ms, Max: 378ms, Median: 9.0ms, Avg: 7.7ms
+512,128  = Last messaged received. Total seconds to process all 989921 messages: 70.0115443
+           Min: 0ms, Max: 314ms, Median: 2.0ms, Avg: 5.1ms
+512,64   = Last messaged received. Total seconds to process all 954366 messages: 61.5486539
+           Min: 0ms, Max: 294ms, Median: 3.0ms, Avg: 5.2ms
+512,32   = Last messaged received. Total seconds to process all 993737 messages: 98.1721452
+           Min: 0ms, Max: 283ms, Median: 4.0ms, Avg: 6.1ms
+1024,64  = Last messaged received. Total seconds to process all 881662 messages: 63.4581286
+           Min: 0ms, Max: 347ms, Median: 16.0ms, Avg: 17.9ms
+1024,128 = Last messaged received. Total seconds to process all 966831 messages: 72.2661626
+           Min: 0ms, Max: 355ms, Median: 15.0ms, Avg: 17.1ms
+1024,256 = Last messaged received. Total seconds to process all 942020 messages: 74.7217257
+           Min: 0ms, Max: 372ms, Median: 17.0ms, Avg: 19.9ms
+1024,512 = Last messaged received. Total seconds to process all 845939 messages: 73.784796
+           Min: 0ms, Max: 414ms, Median: 19.0ms, Avg: 22.4ms
+
+NPGSQL DIRECT IMPLEMENTATION OPEN+CLOSE PER METHOD w/STATS (UPDATED CODE, SLIGHTLY OPTIMIZED, RUNNING ON THE BEST LIVE DROPLET DIGITAL OCEAN HAS)
+NumVirtualPartitions,ConnectionPoolSize,SetMinThreads
+1024,512,2048 = Last messaged received. Total seconds to process all 973011 messages: 87.1509376
+                Min: 0ms, Max: 420ms, Median: 18.0ms, Avg: 20.7ms
+1024,256,2048 = Last messaged received. Total seconds to process all 833186 messages: 66.3926875
+                Min: 0ms, Max: 384ms, Median: 18.0ms, Avg: 21.5ms
+1024,128,2048 = Last messaged received. Total seconds to process all 884588 messages: 65.7471221
+                Min: 0ms, Max: 328ms, Median: 16.0ms, Avg: 18.4ms
+1024,64,2048  = Last messaged received. Total seconds to process all 912463 messages: 66.3427731
+                Min: 0ms, Max: 329ms, Median: 16.0ms, Avg: 17.0ms
+512,64,2048   = Last messaged received. Total seconds to process all 925479 messages: 58.974663
+                Min: 0ms, Max: 272ms, Median: 3.0ms, Avg: 5.3ms
+256,64,2048   = Last messaged received. Total seconds to process all 864877 messages: 62.9709441
+                Min: 0ms, Max: 36ms, Median: 1.0ms, Avg: 1.9ms
+128,64,2048   = Last messaged received. Total seconds to process all 957056 messages: 111.4752905
+                Min: 0ms, Max: 34ms, Median: 0.0ms, Avg: 1.0ms
+256,32,2048   = Last messaged received. Total seconds to process all 944424 messages: 70.4489736
+                Min: 0ms, Max: 34ms, Median: 2.0ms, Avg: 2.3ms
+512,50,2048   = Last messaged received. Total seconds to process all 971890 messages: 65.1232204
+                Min: 0ms, Max: 462ms, Median: 3.0ms, Avg: 5.3ms
+512,96,2048   = Last messaged received. Total seconds to process all 942493 messages: 60.047743 ****
+                Min: 0ms, Max: 300ms, Median: 2.0ms, Avg: 5.2ms
+512,72,2048   = Last messaged received. Total seconds to process all 971937 messages: 64.2156218
+                Min: 0ms, Max: 303ms, Median: 3.0ms, Avg: 5.1ms
+512,112,2048  = Last messaged received. Total seconds to process all 982049 messages: 66.4224108
+                Min: 0ms, Max: 292ms, Median: 2.0ms, Avg: 5.3ms
+384,96,2048   = Last messaged received. Total seconds to process all 950621 messages: 71.5368355
+                Min: 0ms, Max: 47ms, Median: 3.0ms, Avg: 5.0ms
+768,96,2048   = Last messaged received. Total seconds to process all 971459 messages: 66.6165055
+                Min: 0ms, Max: 67ms, Median: 12.0ms, Avg: 11.3ms
+768,64,2048   = Last messaged received. Total seconds to process all 976616 messages: 68.0480165
+                Min: 0ms, Max: 308ms, Median: 12.0ms, Avg: 11.4ms
+384,64,2048   = Last messaged received. Total seconds to process all 985825 messages: 81.8948925
+                Min: 0ms, Max: 110ms, Median: 3.0ms, Avg: 5.0ms
+512,32,2048   = Last messaged received. Total seconds to process all 903313 messages: 63.5364379
+                Min: 0ms, Max: 279ms, Median: 5.0ms, Avg: 6.5ms
+512,16,2048   = Last messaged received. Total seconds to process all 924474 messages: 83.5201537
+                Min: 0ms, Max: 312ms, Median: 8.0ms, Avg: 9.9ms
+5120,64,2048  = Last messaged received. Total seconds to process all 870646 messages: 84.0302761
+                Min: 18ms, Max: 554ms, Median: 100.0ms, Avg: 107.6ms
+
+UPDATED NPGSQL DIRECT IMPLEMENTATION OPEN+CLOSE PER METHOD w/STATS (UPDATED CODE, SLIGHTLY OPTIMIZED, RUNNING ON THE BEST LIVE DROPLET DIGITAL OCEAN HAS)
+NumVirtualPartitions,ConnectionPoolSize,SetMinThreads
+1024,128,2048 = ehhhh it's basically the same, tested multiple combinations, no real difference
+
+GC-TUNED NPGSQL DIRECT IMPLEMENTATION OPEN+CLOSE PER METHOD w/STATS (UPDATED CODE, SLIGHTLY OPTIMIZED, RUNNING ON THE BEST LIVE DROPLET DIGITAL OCEAN HAS)
+NumVirtualPartitions,ConnectionPoolSize,SetMinThreads
+512,512,2048   = Last messaged received. Total seconds to process all 984810 messages: 41.4785239
+                 Min: 0ms, Max: 78ms, Median: 2.0ms, Avg: 2.2ms
+990,990,2048   = Last messaged received. Total seconds to process all 942394 messages: 27.9293304
+                 Min: 0ms, Max: 263ms, Median: 4.0ms, Avg: 5.1ms
+2048,990,4096  = Last messaged received. Total seconds to process all 979244 messages: 25.4429837
+                 Min: 0ms, Max: 545ms, Median: 7.0ms, Avg: 10.7ms
+4096,990,10240 = Last messaged received. Total seconds to process all 972771 messages: 23.1648006 ****** over 2.5M tpm!!!
+                 Min: 0ms, Max: 707ms, Median: 11.0ms, Avg: 14.6ms
+1024,512,4096  = Last messaged received. Total seconds to process all 918402 messages: 23.6416178
+                 Min: 0ms, Max: 217ms, Median: 3.0ms, Avg: 3.5ms
+1024,256,4096  = Last messaged received. Total seconds to process all 920531 messages: 22.5023983
+1024,128,4096  = Last messaged received. Total seconds to process all 952499 messages: 24.7988974
+1024,64,4096   = Last messaged received. Total seconds to process all 969393 messages: 27.5026708
+1024,32,4096   = Last messaged received. Total seconds to process all 996203 messages: 40.3586869
+1024,50,4096   = Last messaged received. Total seconds to process all 972807 messages: 31.9394667
+512,50,4096    = Last messaged received. Total seconds to process all 995073 messages: 45.6722086
+512,100,4096   = Last messaged received. Total seconds to process all 900129 messages: 36.9840078
+512,100,512    = Last messaged received. Total seconds to process all 982348 messages: 43.9374636
+1000,32,1024   = Last messaged received. Total seconds to process all 983212 messages: 36.856319
