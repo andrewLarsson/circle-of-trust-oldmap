@@ -1,0 +1,3 @@
+Need to finish up virtual partitioning
+ - validate that each AR is still processed in-order and without any bugs
+ - write partition reassingment policy/strategy
