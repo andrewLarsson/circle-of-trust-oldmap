@@ -33,8 +33,8 @@ applicationBuilder.Services
 applicationBuilder.Services.AddAuthorization();
 /* End Authentication */
 
-/* Begin Application Services */
-applicationBuilder.Services
+/* Begin Application */
+applicationBuilder
 	.AddOLDMAP()
 	.AddCircleOfTrust()
 	.AddCircleOfTrustView()
@@ -42,7 +42,7 @@ applicationBuilder.Services
 	//.AddSampleCircleOfTrustSimulation()
 	//.AddLargestCircleSimulation()
 ;
-/* End Application Services */
+/* End Application */
 
 var application = applicationBuilder.Build();
 

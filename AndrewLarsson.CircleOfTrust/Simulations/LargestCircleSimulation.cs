@@ -140,10 +140,10 @@ public class LargestCircleSimulationEventHandler(
 	public Task Handle(DomainEvent<UserAlreadyMemberOfCircle> domainEvent) => Check(domainEvent);
 }
 
-public static class LargestCircleSimulationServiceCollectionExtensions {
-	public static IServiceCollection AddLargestCircleSimulation(this IServiceCollection services) {
-		services
-			.AddHostedService<LargestCircleSimulation>()
+public static class LargestCircleSimulationHostApplicationBuilderExtensions {
+	public static IHostApplicationBuilder AddLargestCircleSimulation(this IHostApplicationBuilder applicationBuilder) {
+		applicationBuilder.Services.AddHostedService<LargestCircleSimulation>();
+		applicationBuilder
 			.TryAddKafkaDomainMessageSender()
 			.AddKafkaDomainEventApplication(Applications.LargestCircleSimulation)
 			.AddDomainEventHandler<CircleClaimed, LargestCircleSimulationEventHandler>(Applications.LargestCircleSimulation)
@@ -153,6 +153,6 @@ public static class LargestCircleSimulationServiceCollectionExtensions {
 			.AddDomainEventHandler<KeyDoesNotUnlockCircle, LargestCircleSimulationEventHandler>(Applications.LargestCircleSimulation)
 			.AddDomainEventHandler<UserAlreadyMemberOfCircle, LargestCircleSimulationEventHandler>(Applications.LargestCircleSimulation)
 		;
-		return services;
+		return applicationBuilder;
 	}
 }

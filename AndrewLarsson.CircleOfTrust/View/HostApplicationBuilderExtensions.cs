@@ -4,50 +4,49 @@ using developersBliss.OLDMAP.Hosting;
 using developersBliss.OLDMAP.Messaging;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Npgsql;
 
 namespace AndrewLarsson.CircleOfTrust.View;
-public static class ViewServiceCollectionExtensions {
-	public static IServiceCollection AddCircleOfTrustView(this IServiceCollection services) {
-		services
+public static class HostApplicationBuilderExtensions {
+	public static IHostApplicationBuilder AddCircleOfTrustView(this IHostApplicationBuilder applicationBuilder) {
+		applicationBuilder
 			.AddCircleOfTrustViewDb()
 			.AddCircleOfTrustViewDefaultEventHandler()
 			.AddCircleOfTrustViewCircleStats()
 			.AddCircleOfTrustViewUserStats()
 			.AddCircleOfTrustViewDapperSynchronizationObserver()
 		;
-		return services;
+		return applicationBuilder;
 	}
 
-	public static IServiceCollection AddCircleOfTrustViewDefaultEventHandler(this IServiceCollection services) {
-		services
-			.AddScoped<IDefaultDomainEventHandler, CircleOfTrustViewDefaultHandler>()
-		;
-		return services;
+	public static IHostApplicationBuilder AddCircleOfTrustViewDefaultEventHandler(this IHostApplicationBuilder applicationBuilder) {
+		applicationBuilder.Services.AddScoped<IDefaultDomainEventHandler, CircleOfTrustViewDefaultHandler>();
+		return applicationBuilder;
 	}
 
-	public static IServiceCollection AddCircleOfTrustViewCircleStats(this IServiceCollection services) {
-		services
+	public static IHostApplicationBuilder AddCircleOfTrustViewCircleStats(this IHostApplicationBuilder applicationBuilder) {
+		applicationBuilder
 			.AddKafkaDomainEventApplication(Applications.CircleStatsView)
 			.AddDomainEventHandler<CircleClaimed, CircleStatsViewHandler>(Applications.CircleStatsView)
 			.AddDomainEventHandler<CircleJoined, CircleStatsViewHandler>(Applications.CircleStatsView)
 			.AddDomainEventHandler<CircleBetrayed, CircleStatsViewHandler>(Applications.CircleStatsView)
 		;
-		return services;
+		return applicationBuilder;
 	}
 
-	public static IServiceCollection AddCircleOfTrustViewUserStats(this IServiceCollection services) {
-		services
+	public static IHostApplicationBuilder AddCircleOfTrustViewUserStats(this IHostApplicationBuilder applicationBuilder) {
+		applicationBuilder
 			.AddKafkaDomainEventApplication(Applications.UserStatsView)
 			.AddDomainEventHandler<CircleClaimed, UserStatsViewHandler>(Applications.UserStatsView)
 			.AddDomainEventHandler<CircleJoined, UserStatsViewHandler>(Applications.UserStatsView)
 			.AddDomainEventHandler<CircleBetrayed, UserStatsViewHandler>(Applications.UserStatsView)
 		;
-		return services;
+		return applicationBuilder;
 	}
 
-	public static IServiceCollection AddCircleOfTrustViewDb(this IServiceCollection services) {
-		services.AddScoped(serviceProvider => {
+	public static IHostApplicationBuilder AddCircleOfTrustViewDb(this IHostApplicationBuilder applicationBuilder) {
+		applicationBuilder.Services.AddScoped(serviceProvider => {
 			var configuration = serviceProvider.GetRequiredService<IConfiguration>();
 			var connectionString = configuration.GetConnectionString(ViewDbConnection.ConnectionStringName);
 			NpgsqlConnection postgreSqlConnection = new(connectionString);
@@ -57,11 +56,11 @@ public static class ViewServiceCollectionExtensions {
 			ViewDbConnection viewDbConnection = new(postgreSqlConnection);
 			return viewDbConnection;
 		});
-		return services;
+		return applicationBuilder;
 	}
 
-	public static IServiceCollection AddCircleOfTrustViewDapperSynchronizationObserver(this IServiceCollection services) {
-		services.AddSingleton<ISynchronizationObserver>(serviceProvider => {
+	public static IHostApplicationBuilder AddCircleOfTrustViewDapperSynchronizationObserver(this IHostApplicationBuilder applicationBuilder) {
+		applicationBuilder.Services.AddSingleton<ISynchronizationObserver>(serviceProvider => {
 			var configuration = serviceProvider.GetRequiredService<IConfiguration>();
 			var connectionString = configuration.GetConnectionString(ViewDbConnection.ConnectionStringName);
 			NpgsqlConnection postgreSqlConnection = new(connectionString);
@@ -71,6 +70,6 @@ public static class ViewServiceCollectionExtensions {
 			DapperSynchronizationObserver dapperSynchronizationObserver = new(postgreSqlConnection);
 			return dapperSynchronizationObserver;
 		});
-		return services;
+		return applicationBuilder;
 	}
 }

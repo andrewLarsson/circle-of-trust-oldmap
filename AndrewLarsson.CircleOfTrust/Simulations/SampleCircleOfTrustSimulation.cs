@@ -93,11 +93,9 @@ public class SampleCircleOfTrustSimulation(IDomainMessageSender domainMessageSen
 }
 
 public static class SampleCircleOfTrustSimulationServiceCollectionExtensions {
-	public static IServiceCollection AddSampleCircleOfTrustSimulation(this IServiceCollection services) {
-		services
-			.AddHostedService<SampleCircleOfTrustSimulation>()
-			.TryAddKafkaDomainMessageSender()
-		;
-		return services;
+	public static IHostApplicationBuilder AddSampleCircleOfTrustSimulation(this IHostApplicationBuilder applicationBuilder) {
+		applicationBuilder.Services.AddHostedService<SampleCircleOfTrustSimulation>();
+		applicationBuilder.TryAddKafkaDomainMessageSender();
+		return applicationBuilder;
 	}
 }
