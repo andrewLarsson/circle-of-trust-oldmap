@@ -9,7 +9,9 @@ public static class HostApplicationBuilderExtensions {
 		applicationBuilder.AddKafkaDomainMessageApplication(Applications.Domain);
 		applicationBuilder.Services
 			.AddApplicationServiceWithPureStyle<CircleService, Circle>()
-			.AddPostgreSqlMartenAggregateRootStorage()
+			.AddPostgreSqlMartenAggregateRootStorage((_, options) => {
+				options.AutoCreateSchemaObjects = Weasel.Core.AutoCreate.All;
+			})
 			.TryAddPostgreSqlMartenAggregateRootStore<Circle>()
 			.AddTransient<JsonConverter, CircleJsonConverter>()
 		;
