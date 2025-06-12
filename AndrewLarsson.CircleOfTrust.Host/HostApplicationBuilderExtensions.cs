@@ -3,10 +3,8 @@
 namespace AndrewLarsson.CircleOfTrust.Host;
 public static class HostApplicationBuilderExtensions {
 	public static IHostApplicationBuilder AddCircleOfTrustHost(this IHostApplicationBuilder applicationBuilder) {
-		applicationBuilder
-			.AddSynchronizer()
-			.AddKafkaDomainRequester()
-		;
+		applicationBuilder.AddKafkaDomainRequester();
+		applicationBuilder.Services.AddSynchronizer();
 		return applicationBuilder;
 	}
 }
